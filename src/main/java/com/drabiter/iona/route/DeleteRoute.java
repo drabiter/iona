@@ -28,7 +28,7 @@ public class DeleteRoute extends BasicRoute {
 
         if (delete.getRowsAffected() == 0) return null;
 
-        return "";
+        return param;
     }
 
 }

@@ -16,7 +16,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
 
 import static com.jayway.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
@@ -107,7 +107,7 @@ public class RestIntegrationTest {
 
         readByGetOnId(returned.getId());
 
-        delete("/person/" + returned.getId()).then().assertThat().statusCode(200);
+        delete("/person/" + returned.getId()).then().assertThat().statusCode(200).body(is(String.valueOf(returned.getId())));
 
         get("/person/" + returned.getId()).then().assertThat().statusCode(404);
     }
