@@ -11,6 +11,9 @@ import java.lang.reflect.Modifier;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.drabiter.iona.exception.ExceptionFactory;
+import com.drabiter.iona.exception.IonaException;
+
 public class ModelUtil {
 
     private static ModelUtil instance = new ModelUtil();
@@ -19,7 +22,7 @@ public class ModelUtil {
         return instance;
     }
 
-    public static Field findIdField(Class<?> clazz) throws IntrospectionException, NoSuchFieldException, SecurityException {
+    public static Field findIdField(Class<?> clazz) throws IntrospectionException, NoSuchFieldException, SecurityException, IonaException {
         for (Field field : clazz.getDeclaredFields()) {
             int modifiers = field.getModifiers();
 
@@ -39,7 +42,6 @@ public class ModelUtil {
             }
         }
 
-        return null;
+        throw ExceptionFactory.notFoundIdField(null);
     }
-
 }

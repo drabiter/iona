@@ -4,6 +4,7 @@ import java.beans.IntrospectionException;
 
 import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.pojo.ModelCache;
 import com.drabiter.iona.pojo.Property;
@@ -53,7 +54,7 @@ public class Iona {
         try {
             property.setIdField(ModelUtil.findIdField(clazz));
         } catch (NoSuchFieldException | SecurityException | IntrospectionException e) {
-            throw new IonaException("Could not find ID field", e);
+            throw ExceptionFactory.notFoundIdField(e);
         }
 
         ModelCache.get().cache().put(name, property);
