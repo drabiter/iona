@@ -1,6 +1,7 @@
 package com.drabiter.iona.route;
 
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 
 import spark.Request;
 import spark.Response;
@@ -9,7 +10,6 @@ import com.dieselpoint.norm.Query;
 import com.drabiter.iona.db.DatabaseSingleton;
 import com.drabiter.iona.pojo.ModelCache;
 import com.drabiter.iona.pojo.Property;
-import com.drabiter.iona.route.BasicRoute;
 import com.drabiter.iona.utils.JsonUtil;
 
 public class PutRoute extends BasicRoute {
@@ -37,6 +37,9 @@ public class PutRoute extends BasicRoute {
         Query update = DatabaseSingleton.get().update(instance);
 
         if (update.getRowsAffected() == 0) return null;
+
+        response.status(HttpURLConnection.HTTP_OK);
+        response.type("application/json");
 
         return body;
     }

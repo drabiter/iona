@@ -1,5 +1,7 @@
 package com.drabiter.iona.route;
 
+import java.net.HttpURLConnection;
+
 import spark.Request;
 import spark.Response;
 
@@ -24,7 +26,8 @@ public class PostRoute extends BasicRoute {
 
         DatabaseSingleton.get().insert(instance);
 
-        response.status(201);
+        response.status(HttpURLConnection.HTTP_CREATED);
+        response.type("application/json");
 
         return JsonUtil.get().toJson(instance);
     }

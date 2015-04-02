@@ -89,7 +89,7 @@ public class RestIntegrationTest {
         Person secondPerson = createByPost(person);
 
         ValidatableResponse getResponse = get("/person")
-                .then().assertThat().statusCode(200).body(notNullValue());
+                .then().assertThat().statusCode(200).header("Content-Type", "application/json").body(notNullValue());
 
         String body = getResponse.extract().body().asString();
 
@@ -107,7 +107,7 @@ public class RestIntegrationTest {
 
         readByGetOnId(returned.getId());
 
-        delete("/person/" + returned.getId()).then().assertThat().statusCode(200).body(is(String.valueOf(returned.getId())));
+        delete("/person/" + returned.getId()).then().assertThat().statusCode(202).header("Content-Type", "text/plain").body(is(String.valueOf(returned.getId())));
 
         get("/person/" + returned.getId()).then().assertThat().statusCode(404);
     }
@@ -123,7 +123,7 @@ public class RestIntegrationTest {
         returned.setLastName("Y");
 
         ValidatableResponse putResponse = given().body(JsonUtil.get().toJson(returned)).when().put("/person/" + returned.getId())
-                .then().assertThat().statusCode(200);
+                .then().assertThat().statusCode(200).header("Content-Type", "application/json");
 
         Person put = JsonUtil.get().fromJson(putResponse.extract().body().asString(), Person.class);
 
@@ -142,14 +142,14 @@ public class RestIntegrationTest {
 
     private Person createByPost(Person person) {
         ValidatableResponse createResponse = given().body(JsonUtil.get().toJson(person)).when().post("/person")
-                .then().assertThat().statusCode(201).body(notNullValue());
+                .then().assertThat().statusCode(201).header("Content-Type", "application/json").body(notNullValue());
 
         return JsonUtil.get().fromJson(createResponse.extract().body().asString(), Person.class);
     }
 
     private Person readByGetOnId(long id) {
         ValidatableResponse getResponse = get("/person/" + id)
-                .then().assertThat().statusCode(200).body(notNullValue());
+                .then().assertThat().statusCode(200).header("Content-Type", "application/json").body(notNullValue());
 
         return JsonUtil.get().fromJson(getResponse.extract().body().asString(), Person.class);
     }

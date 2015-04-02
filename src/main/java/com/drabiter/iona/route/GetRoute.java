@@ -1,5 +1,6 @@
 package com.drabiter.iona.route;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import spark.Request;
@@ -24,7 +25,9 @@ public class GetRoute extends BasicRoute {
 
         if (results == null || results.size() == 0) return null;
 
-        // TODO content-type
+        response.status(HttpURLConnection.HTTP_OK);
+        response.type("application/json");
+
         return JsonUtil.get().toJson(results.get(0));
     }
 

@@ -1,5 +1,6 @@
 package com.drabiter.iona.route;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import spark.Request;
@@ -27,6 +28,9 @@ public class DeleteRoute extends BasicRoute {
         Query delete = DatabaseSingleton.get().delete(results.get(0));
 
         if (delete.getRowsAffected() == 0) return null;
+
+        response.status(HttpURLConnection.HTTP_ACCEPTED);
+        response.type("text/plain");
 
         return param;
     }

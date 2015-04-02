@@ -1,5 +1,6 @@
 package com.drabiter.iona.route;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import spark.Request;
@@ -17,6 +18,9 @@ public class GetsRoute extends BasicRoute {
     @Override
     public Object handle(Request request, Response response) throws Exception {
         List<?> results = DatabaseSingleton.get().results(clazz);
+
+        response.status(HttpURLConnection.HTTP_OK);
+        response.type("application/json");
 
         return JsonUtil.get().toJson(results);
     }
