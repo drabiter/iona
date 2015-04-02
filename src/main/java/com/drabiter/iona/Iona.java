@@ -5,14 +5,14 @@ import java.beans.IntrospectionException;
 import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.db.DatabaseSingleton;
 import com.drabiter.iona.exception.IonaException;
-import com.drabiter.iona.pojo.PojoCache;
+import com.drabiter.iona.pojo.ModelCache;
 import com.drabiter.iona.pojo.Property;
 import com.drabiter.iona.route.DeleteRoute;
 import com.drabiter.iona.route.GetRoute;
 import com.drabiter.iona.route.GetsRoute;
 import com.drabiter.iona.route.PostRoute;
 import com.drabiter.iona.route.PutRoute;
-import com.drabiter.iona.utils.PojoUtil;
+import com.drabiter.iona.utils.ModelUtil;
 
 import static spark.Spark.*;
 
@@ -51,12 +51,12 @@ public class Iona {
 
         Property property = new Property(name);
         try {
-            property.setIdField(PojoUtil.findIdField(clazz));
+            property.setIdField(ModelUtil.findIdField(clazz));
         } catch (NoSuchFieldException | SecurityException | IntrospectionException e) {
             throw new IonaException("Could not find ID field", e);
         }
 
-        PojoCache.get().cache().put(name, property);
+        ModelCache.get().cache().put(name, property);
 
         post(String.format(DEFAULT_POST, name), new PostRoute(clazz));
 

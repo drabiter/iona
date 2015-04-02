@@ -30,7 +30,7 @@ public class PojoUtilTest {
 
     @Test
     public void testGetIdPublicField() throws Exception {
-        Field field = PojoUtil.findIdField(PublicFoo.class);
+        Field field = ModelUtil.findIdField(PublicFoo.class);
 
         assertNotNull(field);
         assertEquals("myId", field.getName());
@@ -38,7 +38,7 @@ public class PojoUtilTest {
 
     @Test
     public void testGetIdPrivateField() throws Exception {
-        Field field = PojoUtil.findIdField(PrivateFoo.class);
+        Field field = ModelUtil.findIdField(PrivateFoo.class);
 
         assertNotNull(field);
         assertEquals("myId", field.getName());

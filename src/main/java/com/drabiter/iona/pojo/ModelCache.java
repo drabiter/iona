@@ -2,13 +2,13 @@ package com.drabiter.iona.pojo;
 
 import java.util.HashMap;
 
-public class PojoCache {
+public class ModelCache {
 
     private HashMap<String, Property> cache = new HashMap<String, Property>();
 
-    private static PojoCache instance = new PojoCache();
+    private static ModelCache instance = new ModelCache();
 
-    public static PojoCache get() {
+    public static ModelCache get() {
         return instance;
     }
 

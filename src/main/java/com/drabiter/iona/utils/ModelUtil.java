@@ -11,11 +11,11 @@ import java.lang.reflect.Modifier;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
-public class PojoUtil {
+public class ModelUtil {
 
-    private static PojoUtil instance = new PojoUtil();
+    private static ModelUtil instance = new ModelUtil();
 
-    public static PojoUtil get() {
+    public static ModelUtil get() {
         return instance;
     }
 
