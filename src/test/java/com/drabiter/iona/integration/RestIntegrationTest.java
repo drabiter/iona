@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona.Person;
+import com.drabiter.iona.data.Person;
 import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.utils.JsonUtil;
 import com.jayway.restassured.RestAssured;
