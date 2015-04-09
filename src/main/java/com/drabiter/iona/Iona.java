@@ -29,12 +29,16 @@ public class Iona {
         return new Iona();
     }
 
-    public Iona db(String driver, String url, String db, String user, String password) {
+    public Iona db(String driver, String url, String db, String user, String password) throws IonaException {
         return db(new DatabaseProperty(driver, url, db, user, password));
     }
 
-    public Iona db(DatabaseProperty dbProperty) {
-        if (dbProperty == null) return this;
+    public Iona mysql(String url, String db, String user, String password) throws IonaException {
+        return db(new DatabaseProperty(DatabaseProperty.MYSQL_DATASOURCE, url, db, user, password));
+    }
+
+    public Iona db(DatabaseProperty dbProperty) throws IonaException {
+        if (dbProperty == null) throw ExceptionFactory.requiredDatabaseProperty();
 
         System.setProperty(DatabaseProperty.NORM_DATA_SOURCE_CLASS_NAME, dbProperty.getDriver());
         System.setProperty(DatabaseProperty.NORM_SERVER_NAME, dbProperty.getUrl());

@@ -33,7 +33,12 @@ public class RestIntegrationTest {
     public static void setup() throws Exception {
         port(TEST_PORT);
 
-        DatabaseProperty dbProperty = new DatabaseProperty("com.mysql.jdbc.jdbc2.optional.MysqlDataSource", "localhost", "iona", "root", "");
+        DatabaseProperty dbProperty = new DatabaseProperty(
+                "com.mysql.jdbc.jdbc2.optional.MysqlDataSource",
+                "localhost",
+                "iona",
+                "root",
+                "");
 
         Iona.init().db(dbProperty).addModel(Person.class);
     }

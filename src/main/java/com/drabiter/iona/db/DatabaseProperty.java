@@ -2,6 +2,8 @@ package com.drabiter.iona.db;
 
 public class DatabaseProperty {
 
+    public static final String MYSQL_DATASOURCE = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
+
     public static final String NORM_PASSWORD = "norm.password";
 
     public static final String NORM_USER = "norm.user";
