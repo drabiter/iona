@@ -6,7 +6,7 @@ REST API quickly
 public static void main(String[] args) throws IonaException {
     Iona.init()
             .mysql("localhost", "my_table", "user", "passwd")
-            .addModel(Person.class);
+            .add(Person.class);
 }
 ```
 After prepared the model(s)
@@ -50,3 +50,6 @@ POST    /person       # insert new person record
 PUT     /person/:id   # update person :id
 DELETE  /person/:id   # delete person :id
 ```
+
+## specification
+Tested on MariaDB 10.0.17

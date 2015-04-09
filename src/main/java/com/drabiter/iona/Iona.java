@@ -51,7 +51,7 @@ public class Iona {
         return this;
     }
 
-    public Iona addModel(final Class<?> clazz) throws IonaException {
+    public Iona add(final Class<?> clazz) throws IonaException {
         String name = clazz.getSimpleName().toLowerCase();
 
         Property property = new Property(name);

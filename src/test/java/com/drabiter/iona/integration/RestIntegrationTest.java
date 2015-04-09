@@ -40,7 +40,7 @@ public class RestIntegrationTest {
                 "root",
                 "");
 
-        Iona.init().db(dbProperty).addModel(Person.class);
+        Iona.init().db(dbProperty).add(Person.class);
     }
 
     @AfterClass
