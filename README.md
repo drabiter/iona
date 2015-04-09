@@ -5,7 +5,7 @@ REST API quickly
 ```java
 public static void main(String[] args) throws IonaException {
     Iona.init()
-            .db("com.mysql.jdbc.jdbc2.optional.MysqlDataSource", "localhost", "my_table", "user", "passwd")
+            .mysql("localhost", "my_table", "user", "passwd")
             .addModel(Person.class);
 }
 ```
@@ -42,7 +42,7 @@ public class Person {
     }
 }
 ```
-Generated API (JSON)
+Generated API (JSON) based on class name
 ```
 GET     /person       # select all person records
 GET     /person/:id   # select person :id
