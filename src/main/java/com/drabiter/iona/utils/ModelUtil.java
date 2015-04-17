@@ -11,6 +11,9 @@ import java.lang.reflect.Modifier;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.drabiter.iona.annotations.MentalModel;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 
@@ -26,8 +29,8 @@ public class ModelUtil {
         for (Field field : clazz.getDeclaredFields()) {
             int modifiers = field.getModifiers();
 
-            if (Modifier.isPrivate(modifiers) || Modifier.isFinal(modifiers) || Modifier.isStatic(modifiers)) continue;
             if (field.getAnnotation(Transient.class) != null) continue;
+            if (Modifier.isPrivate(modifiers) || Modifier.isFinal(modifiers) || Modifier.isStatic(modifiers)) continue;
 
             if (field.getAnnotation(Id.class) != null) return field;
         }
@@ -43,5 +46,14 @@ public class ModelUtil {
         }
 
         throw ExceptionFactory.notFoundIdField(null);
+    }
+
+    public static String getEndpoint(Class<?> clazz) {
+        MentalModel annotation = clazz.getAnnotation(MentalModel.class);
+
+        if (annotation == null || StringUtils.isBlank(annotation.endpoint())) {
+            return clazz.getName();
+        }
+        return annotation.endpoint();
     }
 }
