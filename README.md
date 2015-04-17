@@ -9,17 +9,14 @@ public static void main(String[] args) throws IonaException {
             .add(Person.class);
 }
 ```
-After prepared the model(s)
+After prepared the model,
 ```java
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-@Table(name = "persons")
+@Table(name = "persons") // custom table
 public class Person {
     private long id;
-    
+
     private String name;
 
     @Id
@@ -32,7 +29,7 @@ public class Person {
         this.id = id;
     }
 
-    @Column(name = "full_name")
+    @Column(name = "full_name") // custom column
     public String getName() {
         return name;
     }
