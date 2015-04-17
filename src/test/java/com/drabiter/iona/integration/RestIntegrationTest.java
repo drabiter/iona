@@ -9,19 +9,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona.data.Person;
+import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.utils.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
 
+import static com.drabiter.iona._meta.PersonAssert.*;
 import static com.jayway.restassured.RestAssured.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 
-import static org.junit.Assert.*;
-
-import static spark.SparkBase.port;
-import static spark.SparkBase.stop;
+import static spark.SparkBase.*;
 
 public class RestIntegrationTest {
 
@@ -66,10 +65,7 @@ public class RestIntegrationTest {
     public void testCreateByPost() {
         Person returned = createByPost(person);
 
-        assertNotNull(returned);
-        assertNotNull(returned.getId());
-        assertEquals(person.getFirstName(), returned.getFirstName());
-        assertEquals(person.getLastName(), returned.getLastName());
+        assertThat(returned).isNotNull().hasId().hasFirstName(person.getFirstName()).hasLastName(person.getLastName());
     }
 
     @Test
@@ -78,13 +74,9 @@ public class RestIntegrationTest {
 
         Person read = readByGetOnId(returned.getId());
 
-        assertNotNull(read);
-        assertNotNull(read.getId());
-        assertEquals(person.getFirstName(), read.getFirstName());
-        assertEquals(person.getLastName(), read.getLastName());
+        assertThat(read).isNotNull().hasId().hasFirstName(person.getFirstName()).hasLastName(person.getLastName());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testReadByGet() {
         Person firstPerson = createByPost(person);
@@ -98,12 +90,11 @@ public class RestIntegrationTest {
 
         String body = getResponse.extract().body().asString();
 
-        assertTrue(body.contains(JsonUtil.get().toJson(firstPerson)));
-        assertTrue(body.contains(JsonUtil.get().toJson(secondPerson)));
+        assertThat(body).contains(JsonUtil.get().toJson(firstPerson)).contains(JsonUtil.get().toJson(secondPerson));
 
-        List<Person> results = JsonUtil.get().fromJson(body, List.class);
+        List<?> results = JsonUtil.get().fromJson(body, List.class);
 
-        assertTrue(results.size() >= 2);
+        assertThat(results.size()).isGreaterThanOrEqualTo(2);
     }
 
     @Test
@@ -121,8 +112,8 @@ public class RestIntegrationTest {
     public void testUpdateByPut() {
         Person returned = createByPost(person);
 
-        assertNotEquals("X", returned.getFirstName());
-        assertNotEquals("Y", returned.getLastName());
+        assertThat(returned.getFirstName()).isNotEqualTo("X");
+        assertThat(returned.getLastName()).isNotEqualTo("Y");
 
         returned.setFirstName("X");
         returned.setLastName("Y");
@@ -132,17 +123,11 @@ public class RestIntegrationTest {
 
         Person put = JsonUtil.get().fromJson(putResponse.extract().body().asString(), Person.class);
 
-        assertNotNull(put);
-        assertEquals(returned.getId(), put.getId());
-        assertEquals("X", put.getFirstName());
-        assertEquals("Y", put.getLastName());
+        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName("Y");
 
         Person read = readByGetOnId(returned.getId());
 
-        assertNotNull(read);
-        assertEquals(put.getId(), read.getId());
-        assertEquals(put.getFirstName(), read.getFirstName());
-        assertEquals(put.getLastName(), read.getLastName());
+        assertThat(read).isNotNull().hasId(put.getId()).hasFirstName(put.getFirstName()).hasLastName(put.getLastName());
     }
 
     private Person createByPost(Person person) {

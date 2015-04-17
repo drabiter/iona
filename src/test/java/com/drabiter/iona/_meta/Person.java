@@ -1,4 +1,4 @@
-package com.drabiter.iona.data;
+package com.drabiter.iona._meta;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
