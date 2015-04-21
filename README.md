@@ -1,5 +1,5 @@
 # iona
-REST API quickly
+REST API quickly. No XML or any configuration. Annotate the model and one chain call.
 
 ## usage
 ```java
@@ -47,6 +47,7 @@ POST    /person       # insert new person record
 PUT     /person/:id   # update person :id
 DELETE  /person/:id   # delete person :id
 ```
+More on [REST](https://github.com/drabiter/iona/wiki/REST-Specification).
 
 ## specification
 Tested on MariaDB 10.0.17

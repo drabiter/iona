@@ -116,14 +116,14 @@ public class RestIntegrationTest {
         assertThat(returned.getLastName()).isNotEqualTo("Y");
 
         returned.setFirstName("X");
-        returned.setLastName("Y");
+        returned.setLastName(null);
 
         ValidatableResponse putResponse = given().body(JsonUtil.get().toJson(returned)).when().put("/person/" + returned.getId())
                 .then().assertThat().statusCode(200).contentType(ContentType.JSON);
 
         Person put = JsonUtil.get().fromJson(putResponse.extract().body().asString(), Person.class);
 
-        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName("Y");
+        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName("B");
 
         Person read = readByGetOnId(returned.getId());
 
