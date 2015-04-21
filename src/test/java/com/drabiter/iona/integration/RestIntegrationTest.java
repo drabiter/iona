@@ -112,18 +112,18 @@ public class RestIntegrationTest {
     public void testUpdateByPut() {
         Person returned = createByPost(person);
 
-        assertThat(returned.getFirstName()).isNotEqualTo("X");
-        assertThat(returned.getLastName()).isNotEqualTo("Y");
+        assertThat(returned.getFirstName()).isEqualTo("A");
+        assertThat(returned.getLastName()).isEqualTo("B");
 
-        returned.setFirstName("X");
-        returned.setLastName(null);
+        Person update = new Person();
+        update.setFirstName("X");
 
-        ValidatableResponse putResponse = given().body(JsonUtil.get().toJson(returned)).when().put("/person/" + returned.getId())
+        ValidatableResponse putResponse = given().body(JsonUtil.get().toJson(update)).when().put("/person/" + returned.getId())
                 .then().assertThat().statusCode(200).contentType(ContentType.JSON);
 
         Person put = JsonUtil.get().fromJson(putResponse.extract().body().asString(), Person.class);
 
-        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName("B");
+        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName(null);
 
         Person read = readByGetOnId(returned.getId());
 

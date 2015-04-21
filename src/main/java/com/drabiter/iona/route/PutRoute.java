@@ -42,7 +42,7 @@ public class PutRoute extends BasicRoute {
         response.status(HttpURLConnection.HTTP_OK);
         response.type("application/json");
 
-        return body;
+        return JsonUtil.get().toJson(instance);
     }
 
     private Object castToId(Class<?> type, String id) {
