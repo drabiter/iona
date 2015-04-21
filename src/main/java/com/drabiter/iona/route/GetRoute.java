@@ -6,6 +6,7 @@ import spark.Request;
 import spark.Response;
 
 import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.http.ContentType;
 import com.drabiter.iona.utils.JsonUtil;
 
 public class GetRoute extends BasicRoute {
@@ -24,8 +25,7 @@ public class GetRoute extends BasicRoute {
 
         if (entity == null) return null;
 
-        response.status(HttpURLConnection.HTTP_OK);
-        response.type("application/json");
+        response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
 
         return JsonUtil.get().toJson(entity);
     }

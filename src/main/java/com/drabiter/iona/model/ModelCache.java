@@ -1,4 +1,4 @@
-package com.drabiter.iona.pojo;
+package com.drabiter.iona.model;
 
 import java.util.HashMap;
 

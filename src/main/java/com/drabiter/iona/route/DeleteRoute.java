@@ -8,6 +8,7 @@ import spark.Response;
 
 import com.dieselpoint.norm.Query;
 import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.http.ContentType;
 
 public class DeleteRoute extends BasicRoute {
 
@@ -29,8 +30,7 @@ public class DeleteRoute extends BasicRoute {
 
         if (delete.getRowsAffected() == 0) return null;
 
-        response.status(HttpURLConnection.HTTP_ACCEPTED);
-        response.type("text/plain");
+        response(response, HttpURLConnection.HTTP_ACCEPTED, ContentType.TEXT);
 
         return param;
     }

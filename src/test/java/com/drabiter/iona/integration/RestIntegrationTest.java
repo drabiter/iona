@@ -107,7 +107,7 @@ public class RestIntegrationTest {
     }
 
     @Test
-    public void testUpdateByPut() {
+    public void testUpdateByPutFull() {
         Person returned = createByPost(person);
 
         assertThat(returned.getFirstName()).isEqualTo("A");

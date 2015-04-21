@@ -8,8 +8,9 @@ import spark.Response;
 
 import com.dieselpoint.norm.Query;
 import com.drabiter.iona.db.DatabaseSingleton;
-import com.drabiter.iona.pojo.ModelCache;
-import com.drabiter.iona.pojo.Property;
+import com.drabiter.iona.http.ContentType;
+import com.drabiter.iona.model.ModelCache;
+import com.drabiter.iona.model.Property;
 import com.drabiter.iona.utils.JsonUtil;
 import com.drabiter.iona.utils.ModelUtil;
 
@@ -39,8 +40,7 @@ public class PutRoute extends BasicRoute {
 
         if (update.getRowsAffected() == 0) return null;
 
-        response.status(HttpURLConnection.HTTP_OK);
-        response.type("application/json");
+        response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
 
         return JsonUtil.get().toJson(instance);
     }
