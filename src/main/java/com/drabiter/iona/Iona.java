@@ -2,6 +2,8 @@ package com.drabiter.iona;
 
 import java.beans.IntrospectionException;
 
+import spark.SparkBase;
+
 import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.db.DatabaseSingleton;
 import com.drabiter.iona.exception.ExceptionFactory;
@@ -27,6 +29,12 @@ public class Iona {
 
     public static Iona init() {
         return new Iona();
+    }
+
+    public Iona port(int port) {
+        SparkBase.port(port);
+
+        return this;
     }
 
     public Iona db(String driver, String url, String db, String user, String password) throws IonaException {
