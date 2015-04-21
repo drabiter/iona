@@ -52,7 +52,7 @@ public class ModelUtil {
         MentalModel annotation = clazz.getAnnotation(MentalModel.class);
 
         if (annotation == null || StringUtils.isBlank(annotation.endpoint())) {
-            return clazz.getName();
+            return clazz.getSimpleName().toLowerCase();
         }
         return annotation.endpoint();
     }

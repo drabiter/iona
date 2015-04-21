@@ -11,6 +11,7 @@ import com.drabiter.iona.db.DatabaseSingleton;
 import com.drabiter.iona.pojo.ModelCache;
 import com.drabiter.iona.pojo.Property;
 import com.drabiter.iona.utils.JsonUtil;
+import com.drabiter.iona.utils.ModelUtil;
 
 public class PutRoute extends BasicRoute {
 
@@ -29,7 +30,7 @@ public class PutRoute extends BasicRoute {
 
         if (instance == null) return null;
 
-        Property property = ModelCache.get().cache().get(clazz.getSimpleName().toLowerCase());
+        Property property = ModelCache.get().cache().get(ModelUtil.getEndpoint(clazz));
         Field idField = property.getIdField();
         idField.setAccessible(true);
         idField.set(instance, castToId(idField.getType(), id));

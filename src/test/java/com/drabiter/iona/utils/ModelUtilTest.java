@@ -15,35 +15,6 @@ import static org.junit.Assert.*;
 
 public class ModelUtilTest {
 
-    class PublicFoo {
-        @Id
-        public long myId;
-    }
-
-    class PrivateFoo {
-        private long myId;
-
-        @Id
-        public long getMyId() {
-            return myId;
-        }
-
-        public void setMyId(long myId) {
-            this.myId = myId;
-        }
-    }
-
-    @MentalModel(endpoint = "/endpoint")
-    class CustomEndpoint {
-    }
-
-    class NoCustomEndpoint extends CustomEndpoint {
-    }
-
-    @MentalModel(endpoint = "/anotherendpoint")
-    class AnotherCustomEndpoint extends CustomEndpoint {
-    }
-
     @Test
     public void testGetIdPublicField() throws Exception {
         Field field = ModelUtil.findIdField(PublicFoo.class);
@@ -77,6 +48,35 @@ public class ModelUtilTest {
 
     @Test
     public void testGetChildCustomEndpoint() throws Exception {
-        assertThat(ModelUtil.getEndpoint(AnotherCustomEndpoint.class)).isEqualTo("/endpoint");
+        assertThat(ModelUtil.getEndpoint(AnotherCustomEndpoint.class)).isEqualTo("/anotherendpoint");
+    }
+
+    class PublicFoo {
+        @Id
+        public long myId;
+    }
+
+    class PrivateFoo {
+        private long myId;
+
+        @Id
+        public long getMyId() {
+            return myId;
+        }
+
+        public void setMyId(long myId) {
+            this.myId = myId;
+        }
+    }
+
+    @MentalModel(endpoint = "/endpoint")
+    class CustomEndpoint {
+    }
+
+    class NoCustomEndpoint extends CustomEndpoint {
+    }
+
+    @MentalModel(endpoint = "/anotherendpoint")
+    class AnotherCustomEndpoint extends CustomEndpoint {
     }
 }

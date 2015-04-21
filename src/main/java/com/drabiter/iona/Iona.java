@@ -52,7 +52,7 @@ public class Iona {
     }
 
     public Iona add(final Class<?> clazz) throws IonaException {
-        String name = clazz.getSimpleName().toLowerCase();
+        String name = ModelUtil.getEndpoint(clazz);
 
         Property property = new Property(name);
         try {
