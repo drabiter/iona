@@ -1,11 +1,12 @@
 package com.drabiter.iona;
 
 import java.beans.IntrospectionException;
+import java.sql.SQLException;
 
 import spark.SparkBase;
 
 import com.drabiter.iona.db.DatabaseProperty;
-import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.db.Database;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.model.ModelCache;
@@ -37,49 +38,53 @@ public class Iona {
         return this;
     }
 
-    public Iona db(String driver, String url, String db, String user, String password) throws IonaException {
-        return db(new DatabaseProperty(driver, url, db, user, password));
+    public Iona mysql(String url, int port, String db, String user, String password) throws IonaException {
+        return mysql(new DatabaseProperty(url, port, db, user, password));
     }
 
-    public Iona mysql(String url, String db, String user, String password) throws IonaException {
-        return db(new DatabaseProperty(DatabaseProperty.MYSQL_DATASOURCE, url, db, user, password));
-    }
+    public Iona mysql(DatabaseProperty dbProperty) throws IonaException {
+        if (dbProperty == null) throw ExceptionFactory.noDatabaseProperty(); // TODO validate
 
-    public Iona db(DatabaseProperty dbProperty) throws IonaException {
-        if (dbProperty == null) throw ExceptionFactory.requiredDatabaseProperty();
-
-        System.setProperty(DatabaseProperty.NORM_DATA_SOURCE_CLASS_NAME, dbProperty.getDriver());
-        System.setProperty(DatabaseProperty.NORM_SERVER_NAME, dbProperty.getUrl());
-        System.setProperty(DatabaseProperty.NORM_DATABASE_NAME, dbProperty.getDatabase());
-        System.setProperty(DatabaseProperty.NORM_USER, dbProperty.getUser());
-        System.setProperty(DatabaseProperty.NORM_PASSWORD, dbProperty.getPassword());
-
-        DatabaseSingleton.setProperty(dbProperty);
+        try {
+            Database.get().connection(dbProperty);
+        } catch (SQLException e) {
+            throw ExceptionFactory.failPreparingJdbc(e);
+        }
 
         return this;
     }
 
-    public Iona add(final Class<?> clazz) throws IonaException {
-        String name = ModelUtil.getEndpoint(clazz);
+    @SuppressWarnings("unchecked")
+    public <T, I> Iona add(final Class<T> modelClass) throws IonaException {
+        String name = ModelUtil.getEndpoint(modelClass);
 
         Property property = new Property(name);
         try {
-            property.setIdField(ModelUtil.findIdField(clazz));
+            property.setIdField(ModelUtil.findIdField(modelClass));
         } catch (NoSuchFieldException | SecurityException | IntrospectionException e) {
             throw ExceptionFactory.notFoundIdField(e);
         }
 
         ModelCache.get().cache().put(name, property);
 
-        post(String.format(DEFAULT_POST, name), new PostRoute(clazz));
+        Class<I> idClass = (Class<I>) property.getIdField().getType();
 
-        get(String.format(DEFAULT_GET, name), new GetRoute(clazz));
+        try {
+            // TODO test Database / refactor Dao
+            Database.get().addDao(modelClass, idClass);
+        } catch (SQLException e) {
+            throw ExceptionFactory.failPreparingJdbc(e);
+        }
 
-        get(String.format(DEFAULT_GETS, name), new GetsRoute(clazz));
+        post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(modelClass, idClass));
 
-        delete(String.format(DEFAULT_DELETE, name), new DeleteRoute(clazz));
+        get(String.format(DEFAULT_GET, name), new GetRoute<T, I>(modelClass, idClass));
 
-        put(String.format(DEFAULT_PUT, name), new PutRoute(clazz));
+        get(String.format(DEFAULT_GETS, name), new GetsRoute<T, I>(modelClass, idClass));
+
+        delete(String.format(DEFAULT_DELETE, name), new DeleteRoute<T, I>(modelClass, idClass));
+
+        put(String.format(DEFAULT_PUT, name), new PutRoute<T, I>(modelClass, idClass));
 
         return this;
     }

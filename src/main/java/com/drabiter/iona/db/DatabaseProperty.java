@@ -2,21 +2,11 @@ package com.drabiter.iona.db;
 
 public class DatabaseProperty {
 
-    public static final String MYSQL_DATASOURCE = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
+    public static final String CONNECTION_MYSQL = "jdbc:mysql://%s:%s/%s";
 
-    public static final String NORM_PASSWORD = "norm.password";
+    private String host;
 
-    public static final String NORM_USER = "norm.user";
-
-    public static final String NORM_DATABASE_NAME = "norm.databaseName";
-
-    public static final String NORM_SERVER_NAME = "norm.serverName";
-
-    public static final String NORM_DATA_SOURCE_CLASS_NAME = "norm.dataSourceClassName";
-
-    private String driver;
-
-    private String url;
+    private int port;
 
     private String database;
 
@@ -24,31 +14,31 @@ public class DatabaseProperty {
 
     private String password;
 
-    public DatabaseProperty(String dbDriver, String dbUrl, String database, String dbUser, String dbPassword) {
-        this.driver = dbDriver;
-        this.url = dbUrl;
+    public DatabaseProperty(String host, int port, String database, String user, String password) {
+        this.host = host;
+        this.port = port;
         this.database = database;
-        this.user = dbUser;
-        this.password = dbPassword;
+        this.user = user;
+        this.password = password;
     }
 
     public DatabaseProperty() {
     }
 
-    public String getDriver() {
-        return driver;
+    public String getHost() {
+        return host;
     }
 
-    public void setDriver(String driver) {
-        this.driver = driver;
+    public void setHost(String host) {
+        this.host = host;
     }
 
-    public String getUrl() {
-        return url;
+    public int getPort() {
+        return port;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public String getDatabase() {
@@ -75,4 +65,7 @@ public class DatabaseProperty {
         this.password = password;
     }
 
+    public String getUrl() {
+        return String.format(CONNECTION_MYSQL, host, String.valueOf(port), database);
+    }
 }

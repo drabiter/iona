@@ -1,38 +1,35 @@
 package com.drabiter.iona.route;
 
 import java.net.HttpURLConnection;
-import java.util.List;
 
 import spark.Request;
 import spark.Response;
 
-import com.dieselpoint.norm.Query;
-import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.ContentType;
+import com.j256.ormlite.dao.Dao;
 
-public class DeleteRoute extends BasicRoute {
+public class DeleteRoute<T, I> extends BasicRoute<T, I> {
 
-    public DeleteRoute(Class<?> clas) {
-        super(clas);
+    public DeleteRoute(Class<T> modelClass, Class<I> idClass) {
+        super(modelClass, idClass);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        String param = request.params("id");
+        String id = request.params("id");
 
-        if (param == null) return null;
+        if (id == null) return null;
 
-        List<?> results = DatabaseSingleton.get().where("id=?", param).results(clazz);
+        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
+        int affected = dao.deleteById((I) castId(id));
 
-        if (results == null || results.size() == 0) return null;
-
-        Query delete = DatabaseSingleton.get().delete(results.get(0));
-
-        if (delete.getRowsAffected() == 0) return null;
+        if (affected == 0) return null;
 
         response(response, HttpURLConnection.HTTP_ACCEPTED, ContentType.TEXT);
 
-        return param;
+        return id;
     }
 
 }

@@ -57,9 +57,9 @@ public class ModelUtilTest {
     }
 
     class PrivateFoo {
+        @Id
         private long myId;
 
-        @Id
         public long getMyId() {
             return myId;
         }

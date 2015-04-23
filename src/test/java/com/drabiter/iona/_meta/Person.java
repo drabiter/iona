@@ -1,21 +1,23 @@
 package com.drabiter.iona._meta;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Table(name = "persons")
+@Entity(name = "persons")
 public class Person {
-
-    private long id;
-
-    private String firstName;
-
-    private String lastName;
 
     @Id
     @GeneratedValue
+    private long id;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     public long getId() {
         return id;
     }
@@ -24,7 +26,6 @@ public class Person {
         this.id = id;
     }
 
-    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -33,7 +34,6 @@ public class Person {
         this.firstName = firstName;
     }
 
-    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }

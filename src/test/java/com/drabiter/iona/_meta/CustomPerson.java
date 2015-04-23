@@ -1,22 +1,23 @@
 package com.drabiter.iona._meta;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.drabiter.iona.annotations.MentalModel;
 
-@Table(name = "customperson")
+@Entity(name = "customperson")
 @MentalModel(endpoint = "custom_endpoint")
 public class CustomPerson {
 
-    private long id;
-
-    private long socialNumber;
-
     @Id
     @GeneratedValue
+    private long id;
+
+    @Column(name = "social_number")
+    private long socialNumber;
+
     public long getId() {
         return id;
     }
@@ -25,7 +26,6 @@ public class CustomPerson {
         this.id = id;
     }
 
-    @Column(name = "social_number")
     public long getSocialNumber() {
         return socialNumber;
     }

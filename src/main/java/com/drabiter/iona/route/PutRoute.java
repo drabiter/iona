@@ -6,20 +6,21 @@ import java.net.HttpURLConnection;
 import spark.Request;
 import spark.Response;
 
-import com.dieselpoint.norm.Query;
-import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.ContentType;
 import com.drabiter.iona.model.ModelCache;
 import com.drabiter.iona.model.Property;
 import com.drabiter.iona.utils.JsonUtil;
 import com.drabiter.iona.utils.ModelUtil;
+import com.j256.ormlite.dao.Dao;
 
-public class PutRoute extends BasicRoute {
+public class PutRoute<T, I> extends BasicRoute<T, I> {
 
-    public PutRoute(Class<?> clas) {
-        super(clas);
+    public PutRoute(Class<T> modelClass, Class<I> idClass) {
+        super(modelClass, idClass);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object handle(Request request, Response response) throws Exception {
         String body = request.body();
@@ -27,29 +28,23 @@ public class PutRoute extends BasicRoute {
 
         if (body == null || id == null) return null;
 
-        Object instance = JsonUtil.get().fromJson(body, clazz);
+        T instance = JsonUtil.get().fromJson(body, modelClass);
 
         if (instance == null) return null;
 
-        Property property = ModelCache.get().cache().get(ModelUtil.getEndpoint(clazz));
+        Property property = ModelCache.get().cache().get(ModelUtil.getEndpoint(modelClass));
         Field idField = property.getIdField();
         idField.setAccessible(true);
-        idField.set(instance, castToId(idField.getType(), id));
+        idField.set(instance, castId(id));
 
-        Query update = DatabaseSingleton.get().update(instance);
+        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
+        int affected = dao.update(instance);
 
-        if (update.getRowsAffected() == 0) return null;
+        if (affected == 0) return null; // TODO return properly
 
         response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
 
         return JsonUtil.get().toJson(instance);
-    }
-
-    private Object castToId(Class<?> type, String id) {
-        if (Long.class.equals(type) || long.class.equals(type)) {
-            return Long.parseLong(id);
-        }
-        return id;
     }
 
 }

@@ -23,7 +23,7 @@ public class CustomEndpointFeatureTest {
     public static void setup() throws Exception {
         port(TEST_PORT);
 
-        Iona.init().mysql("localhost", "iona", "root", "").add(CustomPerson.class);
+        Iona.init().mysql("localhost", 3306, "iona", "root", "").add(CustomPerson.class);
     }
 
     @Before

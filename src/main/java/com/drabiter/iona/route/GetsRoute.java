@@ -6,19 +6,19 @@ import java.util.List;
 import spark.Request;
 import spark.Response;
 
-import com.drabiter.iona.db.DatabaseSingleton;
+import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.ContentType;
 import com.drabiter.iona.utils.JsonUtil;
 
-public class GetsRoute extends BasicRoute {
+public class GetsRoute<T, I> extends BasicRoute<T, I> {
 
-    public GetsRoute(Class<?> clazz) {
-        super(clazz);
+    public GetsRoute(Class<T> modelClass, Class<I> idClass) {
+        super(modelClass, idClass);
     }
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        List<?> results = DatabaseSingleton.get().results(clazz);
+        List<T> results = Database.get().getDao(modelClass).queryForAll();
 
         response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
 
