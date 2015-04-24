@@ -9,34 +9,20 @@ public static void main(String[] args) throws IonaException {
             .add(Person.class);
 }
 ```
-After prepared the model,
+After prepared the model with [ORMLite](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Local-Annotations) or [javax.persistence](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Javax-Persistence-Annotations) annotations,
 ```java
 import javax.persistence.*;
 
-@Table(name = "persons") // custom table
+@Entity(name = "persons") // custom table
 public class Person {
-    private long id;
-
-    private String name;
-
     @Id
     @GeneratedValue
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private long id;
 
     @Column(name = "full_name") // custom column
-    public String getName() {
-        return name;
-    }
+    private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // getter..setter
 }
 ```
 Generated API (JSON) based on class name
