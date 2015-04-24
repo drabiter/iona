@@ -1,6 +1,7 @@
 package com.drabiter.iona.route;
 
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 
 import spark.Request;
 import spark.Response;
@@ -18,7 +19,7 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) throws SQLException {
         String body = request.body();
 
         if (body == null) return null;
@@ -28,13 +29,18 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
         if (instance == null) return null;
 
         Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
-        dao.create(instance);
+        int affected = dao.create(instance);
 
-        // TODO if affect != 1
-
-        response(response, HttpURLConnection.HTTP_CREATED, ContentType.JSON);
-
-        return JsonUtil.get().toJson(instance);
+        if (affected == 1) {
+            response(response, HttpURLConnection.HTTP_CREATED, ContentType.JSON);
+            return JsonUtil.get().toJson(instance);
+        } else if (affected > 1) {
+            response(response, HttpURLConnection.HTTP_CONFLICT, ContentType.TEXT);
+            return "Conflict resources";
+        } else {
+            response(response, HttpURLConnection.HTTP_GONE, ContentType.TEXT);
+            return "No resource created";
+        }
     }
 
 }

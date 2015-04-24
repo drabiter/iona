@@ -30,12 +30,7 @@ public class RestIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        DatabaseProperty dbProperty = new DatabaseProperty(
-                "localhost",
-                3306,
-                "iona",
-                "root",
-                "");
+        DatabaseProperty dbProperty = new DatabaseProperty("localhost", 3306, "iona", "root", "");
 
         Iona.init().port(TEST_PORT).mysql(dbProperty).add(Person.class);
     }
