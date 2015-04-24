@@ -55,6 +55,11 @@ public class RestIntegrationTest {
     }
 
     @Test
+    public void testPing() {
+        get("/ping").then().assertThat().statusCode(200).body(equalTo("pong"));
+    }
+
+    @Test
     public void testCreateByPost() {
         Person returned = createByPost(person);
 

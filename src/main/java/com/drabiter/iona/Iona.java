@@ -78,6 +78,8 @@ public class Iona {
             throw ExceptionFactory.failPreparingJdbc(e);
         }
 
+        get("ping", (req, res) -> "pong");
+
         post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(database, modelClass, idClass));
 
         get(String.format(DEFAULT_GET, name), new GetRoute<T, I>(database, modelClass, idClass));
