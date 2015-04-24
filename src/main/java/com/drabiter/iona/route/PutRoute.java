@@ -9,18 +9,15 @@ import spark.Response;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.ContentType;
 import com.drabiter.iona.model.ModelCache;
-import com.drabiter.iona.model.Property;
 import com.drabiter.iona.utils.JsonUtil;
 import com.drabiter.iona.utils.ModelUtil;
-import com.j256.ormlite.dao.Dao;
 
 public class PutRoute<T, I> extends BasicRoute<T, I> {
 
-    public PutRoute(Class<T> modelClass, Class<I> idClass) {
-        super(modelClass, idClass);
+    public PutRoute(Database database, Class<T> modelClass, Class<I> idClass) {
+        super(database, modelClass, idClass);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object handle(Request request, Response response) throws Exception {
         String body = request.body();
@@ -32,13 +29,11 @@ public class PutRoute<T, I> extends BasicRoute<T, I> {
 
         if (instance == null) return null;
 
-        Property property = ModelCache.get().cache().get(ModelUtil.getEndpoint(modelClass));
-        Field idField = property.getIdField();
+        Field idField = ModelCache.get().cache().get(ModelUtil.getEndpoint(modelClass)).getIdField();
         idField.setAccessible(true);
         idField.set(instance, castId(id));
 
-        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
-        int affected = dao.update(instance);
+        int affected = database.update(modelClass, instance);
 
         if (affected == 1) {
             response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);

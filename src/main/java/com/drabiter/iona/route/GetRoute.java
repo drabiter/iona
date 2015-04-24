@@ -12,8 +12,8 @@ import com.j256.ormlite.dao.Dao;
 
 public class GetRoute<T, I> extends BasicRoute<T, I> {
 
-    public GetRoute(Class<T> modelType, Class<I> idType) {
-        super(modelType, idType);
+    public GetRoute(Database database, Class<T> modelType, Class<I> idType) {
+        super(database, modelType, idType);
     }
 
     @SuppressWarnings("unchecked")
@@ -23,7 +23,7 @@ public class GetRoute<T, I> extends BasicRoute<T, I> {
 
         if (id == null) return null;
 
-        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
+        Dao<T, I> dao = (Dao<T, I>) database.getDao(modelClass);
         T entity = dao.queryForId((I) castId(id));
 
         if (entity == null) return null;

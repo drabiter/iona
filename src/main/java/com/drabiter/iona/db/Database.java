@@ -10,23 +10,25 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 
 public class Database {
 
-    private static Database instance = new Database();
-
     private JdbcPooledConnectionSource connectionPool;
 
     private Map<Class<?>, Dao<? extends Object, ?>> daoPool = new HashMap<>();
 
-    public static Database get() {
-        return instance;
-    }
-
-    public void connection(DatabaseProperty dbProperty) throws SQLException {
+    public Database(DatabaseProperty dbProperty) throws SQLException {
         connectionPool = new JdbcPooledConnectionSource(dbProperty.getUrl(), dbProperty.getUser(), dbProperty.getPassword());
     }
 
     public <T, I> void addDao(Class<T> clazz, Class<I> idType) throws SQLException {
         Dao<T, I> dao = DaoManager.createDao(connectionPool, clazz);
         daoPool.put(clazz, dao);
+    }
+
+    public <T> int create(Class<T> clazz, T object) throws SQLException {
+        return getDao(clazz).create(object);
+    }
+
+    public <T> int update(Class<T> clazz, T object) throws SQLException {
+        return getDao(clazz).update(object);
     }
 
     @SuppressWarnings("unchecked")

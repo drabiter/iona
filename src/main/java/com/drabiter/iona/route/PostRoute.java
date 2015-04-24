@@ -9,15 +9,13 @@ import spark.Response;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.ContentType;
 import com.drabiter.iona.utils.JsonUtil;
-import com.j256.ormlite.dao.Dao;
 
 public class PostRoute<T, I> extends BasicRoute<T, I> {
 
-    public PostRoute(Class<T> modelType, Class<I> idType) {
-        super(modelType, idType);
+    public PostRoute(Database database, Class<T> modelType, Class<I> idType) {
+        super(database, modelType, idType);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object handle(Request request, Response response) throws SQLException {
         String body = request.body();
@@ -28,8 +26,7 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
 
         if (instance == null) return null;
 
-        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
-        int affected = dao.create(instance);
+        int affected = database.create(modelClass, instance);
 
         if (affected == 1) {
             response(response, HttpURLConnection.HTTP_CREATED, ContentType.JSON);

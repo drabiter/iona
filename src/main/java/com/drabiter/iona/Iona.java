@@ -28,6 +28,8 @@ public class Iona {
     public static final String DEFAULT_DELETE = "/%s/:id";
     public static final String DEFAULT_PUT = "/%s/:id";
 
+    private Database database;
+
     public static Iona init() {
         return new Iona();
     }
@@ -43,10 +45,10 @@ public class Iona {
     }
 
     public Iona mysql(DatabaseProperty dbProperty) throws IonaException {
-        if (dbProperty == null) throw ExceptionFactory.noDatabaseProperty(); // TODO validate
+        if (dbProperty == null) throw ExceptionFactory.noDatabaseProperty();
 
         try {
-            Database.get().connection(dbProperty);
+            database = new Database(dbProperty);
         } catch (SQLException e) {
             throw ExceptionFactory.failPreparingJdbc(e);
         }
@@ -71,22 +73,26 @@ public class Iona {
 
         try {
             // TODO test Database / refactor Dao
-            Database.get().addDao(modelClass, idClass);
+            database.addDao(modelClass, idClass);
         } catch (SQLException e) {
             throw ExceptionFactory.failPreparingJdbc(e);
         }
 
-        post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(modelClass, idClass));
+        post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(database, modelClass, idClass));
 
-        get(String.format(DEFAULT_GET, name), new GetRoute<T, I>(modelClass, idClass));
+        get(String.format(DEFAULT_GET, name), new GetRoute<T, I>(database, modelClass, idClass));
 
-        get(String.format(DEFAULT_GETS, name), new GetsRoute<T, I>(modelClass, idClass));
+        get(String.format(DEFAULT_GETS, name), new GetsRoute<T, I>(database, modelClass, idClass));
 
-        delete(String.format(DEFAULT_DELETE, name), new DeleteRoute<T, I>(modelClass, idClass));
+        delete(String.format(DEFAULT_DELETE, name), new DeleteRoute<T, I>(database, modelClass, idClass));
 
-        put(String.format(DEFAULT_PUT, name), new PutRoute<T, I>(modelClass, idClass));
+        put(String.format(DEFAULT_PUT, name), new PutRoute<T, I>(database, modelClass, idClass));
 
         return this;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 
 }

@@ -11,8 +11,8 @@ import com.j256.ormlite.dao.Dao;
 
 public class DeleteRoute<T, I> extends BasicRoute<T, I> {
 
-    public DeleteRoute(Class<T> modelClass, Class<I> idClass) {
-        super(modelClass, idClass);
+    public DeleteRoute(Database database, Class<T> modelClass, Class<I> idClass) {
+        super(database, modelClass, idClass);
     }
 
     @SuppressWarnings("unchecked")
@@ -22,7 +22,7 @@ public class DeleteRoute<T, I> extends BasicRoute<T, I> {
 
         if (id == null) return null;
 
-        Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
+        Dao<T, I> dao = (Dao<T, I>) database.getDao(modelClass);
         int affected = dao.deleteById((I) castId(id));
 
         if (affected == 0) return null;

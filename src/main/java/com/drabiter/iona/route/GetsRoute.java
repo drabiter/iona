@@ -12,13 +12,13 @@ import com.drabiter.iona.utils.JsonUtil;
 
 public class GetsRoute<T, I> extends BasicRoute<T, I> {
 
-    public GetsRoute(Class<T> modelClass, Class<I> idClass) {
-        super(modelClass, idClass);
+    public GetsRoute(Database database, Class<T> modelClass, Class<I> idClass) {
+        super(database, modelClass, idClass);
     }
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        List<T> results = Database.get().getDao(modelClass).queryForAll();
+        List<T> results = database.getDao(modelClass).queryForAll();
 
         response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
 
