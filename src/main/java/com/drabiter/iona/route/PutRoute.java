@@ -40,11 +40,16 @@ public class PutRoute<T, I> extends BasicRoute<T, I> {
         Dao<T, I> dao = (Dao<T, I>) Database.get().getDao(modelClass);
         int affected = dao.update(instance);
 
-        if (affected == 0) return null; // TODO return properly
-
-        response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
-
-        return JsonUtil.get().toJson(instance);
+        if (affected == 1) {
+            response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
+            return JsonUtil.get().toJson(instance);
+        } else if (affected > 1) {
+            response(response, HttpURLConnection.HTTP_CONFLICT, ContentType.TEXT);
+            return "Conflict resources";
+        } else {
+            response(response, HttpURLConnection.HTTP_GONE, ContentType.TEXT);
+            return "No resource modified";
+        }
     }
 
 }
