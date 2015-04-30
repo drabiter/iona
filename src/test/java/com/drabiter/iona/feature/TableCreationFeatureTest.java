@@ -28,7 +28,7 @@ public class TableCreationFeatureTest {
         JdbcConnectionSource connection = new JdbcConnectionSource("jdbc:mysql://localhost:3306/iona", "root", null);
         TableUtils.dropTable(connection, Person.class, true);
 
-        Iona iona = Iona.init().mysql("localhost", 3306, "iona", "root", "").add(Person.class, true);
+        Iona iona = Iona.init().mysql("localhost", 3306, "iona", "root", "").add(Person.class);
 
         Dao<Person, ?> dao = iona.getDatabase().getDao(Person.class);
 
@@ -37,7 +37,10 @@ public class TableCreationFeatureTest {
 
     @Test
     public void testCreateWhenExist() throws IonaException, SQLException {
-        Iona iona = Iona.init().mysql("localhost", 3306, "iona", "root", "").add(Person.class, true);
+        JdbcConnectionSource connection = new JdbcConnectionSource("jdbc:mysql://localhost:3306/iona", "root", null);
+        TableUtils.createTableIfNotExists(connection, Person.class);
+
+        Iona iona = Iona.init().mysql("localhost", 3306, "iona", "root", "").add(Person.class);
 
         Dao<Person, ?> dao = iona.getDatabase().getDao(Person.class);
 

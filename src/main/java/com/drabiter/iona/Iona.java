@@ -58,29 +58,16 @@ public class Iona {
     }
 
     public <T, I> Iona add(final Class<T> modelClass) throws IonaException {
-        return add(modelClass, true);
-    }
-
-    public <T, I> Iona add(final Class<T> modelClass, boolean createTable) throws IonaException {
         String name = ModelUtil.getEndpoint(modelClass);
 
-        Property property = new Property(name);
-        try {
-            property.setIdField(ModelUtil.findIdField(modelClass));
-        } catch (NoSuchFieldException | SecurityException | IntrospectionException e) {
-            throw ExceptionFactory.notFoundIdField(e);
-        }
-
-        ModelCache.get().cache().put(name, property);
+        Property property = registerProperty(modelClass, name);
 
         @SuppressWarnings("unchecked")
         Class<I> idClass = (Class<I>) property.getIdField().getType();
 
         try {
             // TODO test Database / refactor Dao
-            if (createTable) {
-                database.createTable(modelClass);
-            }
+            database.createTable(modelClass);
             database.addDao(modelClass, idClass);
         } catch (SQLException e) {
             throw ExceptionFactory.failPreparingJdbc(e);
@@ -109,6 +96,19 @@ public class Iona {
 
     public Database getDatabase() {
         return database;
+    }
+
+    private Property registerProperty(Class<?> modelClass, String name) throws IonaException {
+        Property property = new Property(name);
+        try {
+            property.setIdField(ModelUtil.findIdField(modelClass));
+        } catch (NoSuchFieldException | SecurityException | IntrospectionException e) {
+            throw ExceptionFactory.notFoundIdField(e);
+        }
+
+        ModelCache.get().cache().put(name, property);
+
+        return property;
     }
 
 }
