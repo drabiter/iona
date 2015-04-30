@@ -33,6 +33,8 @@ public class RestIntegrationTest {
         DatabaseProperty dbProperty = new DatabaseProperty("localhost", 3306, "iona", "root", "");
 
         Iona.init().port(TEST_PORT).mysql(dbProperty).add(Person.class);
+
+        Thread.sleep(1500);
     }
 
     @AfterClass

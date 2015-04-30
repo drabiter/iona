@@ -7,6 +7,7 @@ import java.util.Map;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 public class Database {
 
@@ -18,27 +19,28 @@ public class Database {
         connectionPool = new JdbcPooledConnectionSource(dbProperty.getUrl(), dbProperty.getUser(), dbProperty.getPassword());
     }
 
-    public <T, I> void addDao(Class<T> clazz, Class<I> idType) throws SQLException {
-        Dao<T, I> dao = DaoManager.createDao(connectionPool, clazz);
-        daoPool.put(clazz, dao);
+    public <T> void createTable(Class<T> modelType) throws SQLException {
+        TableUtils.createTableIfNotExists(connectionPool, modelType);
     }
 
-    public <T> int create(Class<T> clazz, T object) throws SQLException {
-        return getDao(clazz).create(object);
+    public <T, I> void addDao(Class<T> modelType, Class<I> idType) throws SQLException {
+        Dao<T, I> dao = DaoManager.createDao(connectionPool, modelType);
+        daoPool.put(modelType, dao);
     }
 
-    public <T> int update(Class<T> clazz, T object) throws SQLException {
-        return getDao(clazz).update(object);
+    public <T> int create(Class<T> modelType, T object) throws SQLException {
+        return getDao(modelType).create(object);
     }
+
+    public <T> int update(Class<T> modelType, T object) throws SQLException {
+        return getDao(modelType).update(object);
+    }
+
+    // TODO read and delete
 
     @SuppressWarnings("unchecked")
-    public <T> Dao<T, ?> getDao(Class<T> clazz) {
-        return (Dao<T, ?>) daoPool.get(clazz);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T, I> Dao<T, I> getDao(Class<T> clazz, Class<I> type) {
-        return (Dao<T, I>) daoPool.get(clazz);
+    public <T> Dao<T, ?> getDao(Class<T> modelType) {
+        return (Dao<T, ?>) daoPool.get(modelType);
     }
 
     public JdbcPooledConnectionSource getConnectionPool() {

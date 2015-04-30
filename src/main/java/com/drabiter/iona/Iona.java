@@ -4,9 +4,10 @@ import java.beans.IntrospectionException;
 import java.sql.SQLException;
 
 import spark.SparkBase;
+import spark.route.RouteMatcherFactory;
 
-import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.db.Database;
+import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.model.ModelCache;
@@ -56,8 +57,11 @@ public class Iona {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     public <T, I> Iona add(final Class<T> modelClass) throws IonaException {
+        return add(modelClass, true);
+    }
+
+    public <T, I> Iona add(final Class<T> modelClass, boolean createTable) throws IonaException {
         String name = ModelUtil.getEndpoint(modelClass);
 
         Property property = new Property(name);
@@ -69,10 +73,14 @@ public class Iona {
 
         ModelCache.get().cache().put(name, property);
 
+        @SuppressWarnings("unchecked")
         Class<I> idClass = (Class<I>) property.getIdField().getType();
 
         try {
             // TODO test Database / refactor Dao
+            if (createTable) {
+                database.createTable(modelClass);
+            }
             database.addDao(modelClass, idClass);
         } catch (SQLException e) {
             throw ExceptionFactory.failPreparingJdbc(e);
@@ -80,15 +88,21 @@ public class Iona {
 
         get("ping", (req, res) -> "pong");
 
-        post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(database, modelClass, idClass));
-
         get(String.format(DEFAULT_GET, name), new GetRoute<T, I>(database, modelClass, idClass));
 
         get(String.format(DEFAULT_GETS, name), new GetsRoute<T, I>(database, modelClass, idClass));
 
+        post(String.format(DEFAULT_POST, name), new PostRoute<T, I>(database, modelClass, idClass));
+
         delete(String.format(DEFAULT_DELETE, name), new DeleteRoute<T, I>(database, modelClass, idClass));
 
         put(String.format(DEFAULT_PUT, name), new PutRoute<T, I>(database, modelClass, idClass));
+
+        return this;
+    }
+
+    public Iona clearRoutes() {
+        RouteMatcherFactory.get().clearRoutes();
 
         return this;
     }

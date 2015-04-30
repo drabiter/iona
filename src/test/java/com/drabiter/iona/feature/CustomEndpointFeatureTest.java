@@ -26,6 +26,11 @@ public class CustomEndpointFeatureTest {
         Iona.init().mysql("localhost", 3306, "iona", "root", "").add(CustomPerson.class);
     }
 
+    @AfterClass
+    public static void tearDown() {
+        stop();
+    }
+
     @Before
     public void before() {
         RestAssured.port = TEST_PORT;
@@ -34,11 +39,6 @@ public class CustomEndpointFeatureTest {
     @After
     public void after() {
         RestAssured.reset();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        stop();
     }
 
     @Test
