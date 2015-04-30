@@ -1,0 +1,5 @@
+language: java
+jdk: oraclejdk8
+services: mysql
+before_script:
+  - mysql -e 'create database IF NOT EXISTS iona;' -uroot
