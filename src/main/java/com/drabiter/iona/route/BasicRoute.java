@@ -22,7 +22,10 @@ public abstract class BasicRoute<T, I> implements Route {
 
     protected void response(Response response, int status, ContentType type) {
         response.status(status);
-        response.type(type.asHeader());
+
+        if (type != null) {
+            response.type(type.asHeader());
+        }
     }
 
     protected Object castId(String id) throws IonaException {

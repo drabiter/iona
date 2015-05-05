@@ -6,7 +6,6 @@ import spark.Request;
 import spark.Response;
 
 import com.drabiter.iona.db.Database;
-import com.drabiter.iona.http.ContentType;
 import com.j256.ormlite.dao.Dao;
 
 public class DeleteRoute<T, I> extends BasicRoute<T, I> {
@@ -27,9 +26,9 @@ public class DeleteRoute<T, I> extends BasicRoute<T, I> {
 
         if (affected == 0) return null;
 
-        response(response, HttpURLConnection.HTTP_ACCEPTED, ContentType.TEXT);
+        response(response, HttpURLConnection.HTTP_NO_CONTENT, null);
 
-        return id;
+        return "";
     }
 
 }

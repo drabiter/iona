@@ -103,7 +103,7 @@ public class RestIntegrationTest {
 
         readByGetOnId(returned.getId());
 
-        delete("/person/" + returned.getId()).then().assertThat().statusCode(202).contentType(ContentType.TEXT).body(is(String.valueOf(returned.getId())));
+        delete("/person/" + returned.getId()).then().assertThat().statusCode(204).body(isEmptyOrNullString());
 
         get("/person/" + returned.getId()).then().assertThat().statusCode(404);
     }

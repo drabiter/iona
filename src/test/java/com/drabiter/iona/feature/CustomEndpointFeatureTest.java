@@ -50,6 +50,6 @@ public class CustomEndpointFeatureTest {
         int id = from(response.extract().asString()).get("id");
 
         given().body("{\"social_number\":3}").when().put("/custom_endpoint/" + id).then().assertThat().statusCode(200);
-        delete("/custom_endpoint/" + id).then().assertThat().statusCode(202);
+        delete("/custom_endpoint/" + id).then().assertThat().statusCode(204);
     }
 }
