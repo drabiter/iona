@@ -6,7 +6,7 @@ iona
 [travis-img]: http://img.shields.io/travis/drabiter/iona.svg?style=flat-square
 [travis-url]: https://travis-ci.org/drabiter/iona
 
-REST API quickly. No XML or any configuration. Annotate the model and one chain call.
+REST API quickly. No XML, YAML, or any configuration. Annotate the model and one chain call.
 
 ## usage
 ```java
