@@ -1,19 +1,18 @@
 package com.drabiter.iona.route;
 
-import java.net.HttpURLConnection;
+import java.util.List;
 
 import spark.Request;
 import spark.Response;
 
-import com.drabiter.iona.db.Database;
-import com.drabiter.iona.http.ContentType;
-import com.drabiter.iona.utils.JsonUtil;
+import com.drabiter.iona.IonaResource;
+import com.drabiter.iona.util.ModelUtil;
 import com.j256.ormlite.dao.Dao;
 
 public class GetRoute<T, I> extends BasicRoute<T, I> {
 
-    public GetRoute(Database database, Class<T> modelType, Class<I> idType) {
-        super(database, modelType, idType);
+    public GetRoute(IonaResource iona, Class<T> modelType, Class<I> idType) {
+        super(iona, modelType, idType);
     }
 
     @SuppressWarnings("unchecked")
@@ -21,16 +20,20 @@ public class GetRoute<T, I> extends BasicRoute<T, I> {
     public Object handle(Request request, Response response) throws Exception {
         String id = request.params("id");
 
-        if (id == null) return null;
+        if (id == null) {
+            List<T> results = iona.getDatabase().getDao(modelClass).queryForAll();
 
-        Dao<T, I> dao = (Dao<T, I>) database.getDao(modelClass);
-        T entity = dao.queryForId((I) castId(id));
+            return response200(response, results);
+        }
 
-        if (entity == null) return null;
+        Dao<T, I> dao = (Dao<T, I>) iona.getDatabase().getDao(modelClass);
+        T entity = dao.queryForId((I) ModelUtil.castId(id, idClass));
 
-        response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
+        if (entity == null) {
+            return response404(response);
+        }
 
-        return JsonUtil.get().toJson(entity);
+        return response200(response, entity);
     }
 
 }

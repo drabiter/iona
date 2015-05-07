@@ -1,4 +1,4 @@
-package com.drabiter.iona.utils;
+package com.drabiter.iona.util;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
@@ -9,17 +9,11 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.drabiter.iona.annotations.MentalModel;
+import com.drabiter.iona.annotation.MentalModel;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 
 public class ModelUtil {
-
-    private static ModelUtil instance = new ModelUtil();
-
-    public static ModelUtil get() {
-        return instance;
-    }
 
     public static Field findIdField(Class<?> clazz) throws IntrospectionException, NoSuchFieldException, SecurityException, IonaException {
         for (Field field : clazz.getDeclaredFields()) {
@@ -41,5 +35,14 @@ public class ModelUtil {
             return clazz.getSimpleName().toLowerCase();
         }
         return annotation.endpoint();
+    }
+
+    public static Object castId(String id, Class<?> type) throws IonaException {
+        if (Long.class == type || long.class == type) {
+            return Long.parseLong(id);
+        } else if (String.class == type) {
+            return id;
+        }
+        throw ExceptionFactory.notSupportedIdField();
     }
 }

@@ -4,20 +4,20 @@ import java.lang.reflect.Field;
 
 public class Property {
 
-    private String name;
+    private String endpoint;
 
     private Field idField;
 
-    public Property(String name) {
-        this.name = name;
+    private Class<?> modelClass;
+
+    private Class<?> idClass;
+
+    public String getEndpoint() {
+        return endpoint;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     public Field getIdField() {
@@ -26,5 +26,21 @@ public class Property {
 
     public void setIdField(Field idField) {
         this.idField = idField;
+    }
+
+    public Class<?> getModelClass() {
+        return modelClass;
+    }
+
+    public void setModelClass(Class<?> modelClass) {
+        this.modelClass = modelClass;
+    }
+
+    public Class<?> getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(Class<?> idClass) {
+        this.idClass = idClass;
     }
 }

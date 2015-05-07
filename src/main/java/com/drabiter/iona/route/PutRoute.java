@@ -1,21 +1,16 @@
 package com.drabiter.iona.route;
 
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-
 import spark.Request;
 import spark.Response;
 
-import com.drabiter.iona.db.Database;
-import com.drabiter.iona.http.ContentType;
-import com.drabiter.iona.model.ModelCache;
-import com.drabiter.iona.utils.JsonUtil;
-import com.drabiter.iona.utils.ModelUtil;
+import com.drabiter.iona.IonaResource;
+import com.drabiter.iona.model.Pojo;
+import com.drabiter.iona.util.JsonUtil;
 
 public class PutRoute<T, I> extends BasicRoute<T, I> {
 
-    public PutRoute(Database database, Class<T> modelClass, Class<I> idClass) {
-        super(database, modelClass, idClass);
+    public PutRoute(IonaResource iona, Class<T> modelClass, Class<I> idClass) {
+        super(iona, modelClass, idClass);
     }
 
     @Override
@@ -23,27 +18,26 @@ public class PutRoute<T, I> extends BasicRoute<T, I> {
         String body = request.body();
         String id = request.params("id");
 
-        if (body == null || id == null) return null;
+        if (id == null) {
+            return response404(response);
+        }
 
         T instance = JsonUtil.get().fromJson(body, modelClass);
 
-        if (instance == null) return null;
+        if (instance == null) {
+            return response400(response);
+        }
 
-        Field idField = ModelCache.get().cache().get(ModelUtil.getEndpoint(modelClass)).getIdField();
-        idField.setAccessible(true);
-        idField.set(instance, castId(id));
+        Pojo.setId(instance, id);
 
-        int affected = database.update(modelClass, instance);
+        int affected = iona.getDatabase().update(modelClass, instance);
 
         if (affected == 1) {
-            response(response, HttpURLConnection.HTTP_OK, ContentType.JSON);
-            return JsonUtil.get().toJson(instance);
+            return response200(response, JsonUtil.get().toJson(instance));
         } else if (affected > 1) {
-            response(response, HttpURLConnection.HTTP_CONFLICT, ContentType.TEXT);
-            return "Conflict resources";
+            return response409(response, "Conflict resources");
         } else {
-            response(response, HttpURLConnection.HTTP_GONE, ContentType.TEXT);
-            return "No resource modified";
+            return response410(response, "No resource modified");
         }
     }
 

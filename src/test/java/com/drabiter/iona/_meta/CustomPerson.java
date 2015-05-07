@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.drabiter.iona.annotations.MentalModel;
+import com.drabiter.iona.annotation.MentalModel;
 
 @Entity(name = "customperson")
 @MentalModel(endpoint = "custom_endpoint")

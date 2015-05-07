@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
+import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
-import com.drabiter.iona.db.DatabaseProperty;
-import com.drabiter.iona.utils.JsonUtil;
+import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -24,15 +24,11 @@ import static spark.SparkBase.*;
 
 public class RestIntegrationTest {
 
-    protected static final int TEST_PORT = 4568;
-
     private Person person;
 
     @BeforeClass
     public static void setup() throws Exception {
-        DatabaseProperty dbProperty = new DatabaseProperty("localhost", 3306, "iona", "root", "");
-
-        Iona.init().port(TEST_PORT).mysql(dbProperty).add(Person.class);
+        Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT).add(Person.class);
 
         Thread.sleep(1500);
     }
@@ -44,7 +40,7 @@ public class RestIntegrationTest {
 
     @Before
     public void before() {
-        RestAssured.port = TEST_PORT;
+        RestAssured.port = Helper.TEST_PORT;
 
         person = new Person();
         person.setFirstName("A");

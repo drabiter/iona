@@ -15,8 +15,8 @@ public class Database {
 
     private Map<Class<?>, Dao<? extends Object, ?>> daoPool = new HashMap<>();
 
-    public Database(DatabaseProperty dbProperty) throws SQLException {
-        connectionPool = new JdbcPooledConnectionSource(dbProperty.getUrl(), dbProperty.getUser(), dbProperty.getPassword());
+    public Database(String url, String user, String password) throws SQLException {
+        connectionPool = new JdbcPooledConnectionSource(url, user, password);
     }
 
     public <T> void createTable(Class<T> modelType) throws SQLException {

@@ -1,4 +1,4 @@
-package com.drabiter.iona.utils;
+package com.drabiter.iona.util;
 
 import com.google.gson.Gson;
 

@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.CustomPerson;
+import com.drabiter.iona._meta.Helper;
+import com.drabiter.iona.exception.IonaException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
 
@@ -15,15 +17,13 @@ import static com.jayway.restassured.RestAssured.*;
 import static com.jayway.restassured.path.json.JsonPath.*;
 import static spark.SparkBase.*;
 
-public class CustomEndpointFeatureTest {
+public class EndpointFeatureTest {
 
-    protected static final int TEST_PORT = 4568;
+    private static Iona iona;
 
     @BeforeClass
-    public static void setup() throws Exception {
-        port(TEST_PORT);
-
-        Iona.init().mysql("localhost", 3306, "iona", "root", "").add(CustomPerson.class);
+    public static void setup() {
+        port(Helper.TEST_PORT);
     }
 
     @AfterClass
@@ -32,8 +32,10 @@ public class CustomEndpointFeatureTest {
     }
 
     @Before
-    public void before() {
-        RestAssured.port = TEST_PORT;
+    public void before() throws IonaException {
+        RestAssured.port = Helper.TEST_PORT;
+
+        iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").add(CustomPerson.class);
     }
 
     @After
@@ -51,5 +53,14 @@ public class CustomEndpointFeatureTest {
 
         given().body("{\"social_number\":3}").when().put("/custom_endpoint/" + id).then().assertThat().statusCode(200);
         delete("/custom_endpoint/" + id).then().assertThat().statusCode(204);
+    }
+
+    @Test
+    public void testClearRoutes() {
+        get("/custom_endpoint").then().assertThat().statusCode(200);
+
+        iona.clearRoutes();
+
+        get("/custom_endpoint").then().assertThat().statusCode(404);
     }
 }

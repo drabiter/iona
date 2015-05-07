@@ -1,4 +1,4 @@
-package com.drabiter.iona.annotations;
+package com.drabiter.iona.annotation;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

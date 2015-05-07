@@ -1,42 +1,37 @@
 package com.drabiter.iona.route;
 
-import java.net.HttpURLConnection;
 import java.sql.SQLException;
 
 import spark.Request;
 import spark.Response;
 
-import com.drabiter.iona.db.Database;
-import com.drabiter.iona.http.ContentType;
-import com.drabiter.iona.utils.JsonUtil;
+import com.drabiter.iona.IonaResource;
+import com.drabiter.iona.util.JsonUtil;
 
 public class PostRoute<T, I> extends BasicRoute<T, I> {
 
-    public PostRoute(Database database, Class<T> modelType, Class<I> idType) {
-        super(database, modelType, idType);
+    public PostRoute(IonaResource iona, Class<T> modelType, Class<I> idType) {
+        super(iona, modelType, idType);
     }
 
     @Override
     public Object handle(Request request, Response response) throws SQLException {
         String body = request.body();
 
-        if (body == null) return null;
-
         T instance = JsonUtil.get().fromJson(body, modelClass);
 
-        if (instance == null) return null;
+        if (instance == null) {
+            return response400(response);
+        }
 
-        int affected = database.create(modelClass, instance);
+        int affected = iona.getDatabase().create(modelClass, instance);
 
         if (affected == 1) {
-            response(response, HttpURLConnection.HTTP_CREATED, ContentType.JSON);
-            return JsonUtil.get().toJson(instance);
+            return response201(response, instance);
         } else if (affected > 1) {
-            response(response, HttpURLConnection.HTTP_CONFLICT, ContentType.TEXT);
-            return "Conflict resources";
+            return response409(response, "Conflict resources");
         } else {
-            response(response, HttpURLConnection.HTTP_GONE, ContentType.TEXT);
-            return "No resource created";
+            return response410(response, "No resource created");
         }
     }
 

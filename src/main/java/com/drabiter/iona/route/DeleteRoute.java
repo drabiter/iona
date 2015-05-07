@@ -1,17 +1,16 @@
 package com.drabiter.iona.route;
 
-import java.net.HttpURLConnection;
-
 import spark.Request;
 import spark.Response;
 
-import com.drabiter.iona.db.Database;
+import com.drabiter.iona.IonaResource;
+import com.drabiter.iona.util.ModelUtil;
 import com.j256.ormlite.dao.Dao;
 
 public class DeleteRoute<T, I> extends BasicRoute<T, I> {
 
-    public DeleteRoute(Database database, Class<T> modelClass, Class<I> idClass) {
-        super(database, modelClass, idClass);
+    public DeleteRoute(IonaResource iona, Class<T> modelClass, Class<I> idClass) {
+        super(iona, modelClass, idClass);
     }
 
     @SuppressWarnings("unchecked")
@@ -19,16 +18,18 @@ public class DeleteRoute<T, I> extends BasicRoute<T, I> {
     public Object handle(Request request, Response response) throws Exception {
         String id = request.params("id");
 
-        if (id == null) return null;
+        if (id == null) {
+            return response404(response);
+        }
 
-        Dao<T, I> dao = (Dao<T, I>) database.getDao(modelClass);
-        int affected = dao.deleteById((I) castId(id));
+        Dao<T, I> dao = (Dao<T, I>) iona.getDatabase().getDao(modelClass);
+        int affected = dao.deleteById((I) ModelUtil.castId(id, idClass));
 
-        if (affected == 0) return null;
+        if (affected == 0) {
+            return response404(response);
+        }
 
-        response(response, HttpURLConnection.HTTP_NO_CONTENT, null);
-
-        return "";
+        return response204(response);
     }
 
 }

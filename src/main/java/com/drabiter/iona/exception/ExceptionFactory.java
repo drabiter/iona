@@ -10,20 +10,25 @@ public class ExceptionFactory {
 
     public static IonaException notFoundIdField(Throwable t) {
         t.printStackTrace();
-        return new IonaException("Could not find ID field", t);
+        return new IonaException("Could not find @Id field", t);
     }
 
     public static IonaException notFoundIdField() {
-        return new IonaException("Could not find ID field");
+        return new IonaException("@Id field is missing");
     }
 
     public static IonaException notSupportedIdField() {
-        return new IonaException("Unsupported type for ID field");
+        return new IonaException("Unsupported type for @Id field");
     }
 
     public static IonaException failPreparingJdbc(SQLException e) {
         e.printStackTrace();
         return new IonaException("Could not open database connection", e);
+    }
+
+    public static IonaException failDatabase(SQLException e) {
+        e.printStackTrace();
+        return new IonaException("Database error", e);
     }
 
 }

@@ -9,12 +9,12 @@ import org.junit.Test;
 import spark.route.RouteMatcherFactory;
 
 import com.drabiter.iona.Iona;
+import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.db.Database;
-import com.drabiter.iona.db.DatabaseProperty;
 import com.drabiter.iona.exception.IonaException;
-import com.drabiter.iona.utils.JsonUtil;
+import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -28,16 +28,13 @@ import static spark.SparkBase.*;
 
 public class PutIntegrationTest {
 
-    protected static final int TEST_PORT = 4568;
-
     private static Iona iona;
 
     private static Database originalDatabase;
 
     @BeforeClass
     public static void setup() throws Exception {
-        DatabaseProperty dbProperty = new DatabaseProperty("localhost", 3306, "iona", "root", "");
-        iona = Iona.init().port(TEST_PORT).mysql(dbProperty);
+        iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT);
         originalDatabase = iona.getDatabase();
     }
 
@@ -48,7 +45,7 @@ public class PutIntegrationTest {
 
     @Before
     public void before() throws IonaException {
-        RestAssured.port = TEST_PORT;
+        RestAssured.port = Helper.TEST_PORT;
         RouteMatcherFactory.get().clearRoutes();
     }
 
@@ -60,12 +57,12 @@ public class PutIntegrationTest {
 
     @Test
     public void testPutNotCreated() throws Exception {
-        sharedTestPutFail(410, "No resource modified", 0);
+        sharedTestPutFail(410, Helper.TEXT_410_PUT, 0);
     }
 
     @Test
     public void testPutCreatedMultiple() throws Exception {
-        sharedTestPutFail(409, "Conflict resources", 2);
+        sharedTestPutFail(409, Helper.TEXT_409, 2);
     }
 
     private void sharedTestPutFail(int expectedCode, String expectedMessage, int mockValue) throws Exception {
