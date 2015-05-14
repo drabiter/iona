@@ -6,21 +6,20 @@ iona
 [travis-img]: http://img.shields.io/travis/drabiter/iona.svg?style=flat-square
 [travis-url]: https://travis-ci.org/drabiter/iona
 
-REST API quickly. No XML, YAML, or any configuration. Annotate the model and one chain call.
+REST API quickly. No XML, YAML, or any configuration. Annotate the model, invoke, done.
 
 ## usage
+Complete utilization,
 ```java
 public static void main(String[] args) throws IonaException {
-    Iona.init()
-            .mysql("localhost", "my_table", "user", "passwd")
-            .add(Person.class);
+    Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(8080).add(Person.class);
 }
 ```
 After prepared the model with [ORMLite](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Local-Annotations) or [javax.persistence](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Javax-Persistence-Annotations) annotations,
 ```java
 import javax.persistence.*;
 
-@Entity(name = "persons") // custom table
+@Entity(name = "people_of_sea") // custom table
 public class Person {
     @Id
     @GeneratedValue
