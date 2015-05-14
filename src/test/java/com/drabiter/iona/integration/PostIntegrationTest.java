@@ -18,6 +18,7 @@ import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
+import static com.drabiter.iona._meta.IsSamePerson.*;
 import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
@@ -51,6 +52,22 @@ public class PostIntegrationTest {
     public void after() throws Exception {
         TestUtils.setIonaDatabase(iona, originalDatabase);
         reset();
+    }
+
+    @Test
+    public void testPostDuplicate() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        given().body(JsonUtil.get().toJson(person)).when().post("/person")
+                .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person));
     }
 
     @Test

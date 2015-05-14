@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static spark.SparkBase.*;
+import static com.drabiter.iona._meta.IsSamePerson.*;
 
 public class PutIntegrationTest {
 
@@ -67,6 +68,22 @@ public class PutIntegrationTest {
 
         given().body(JsonUtil.get().toJson(person)).when().put("/person/" + (person.getId() + 999))
                 .then().assertThat().statusCode(410).contentType(ContentType.TEXT).body(equalTo(Helper.TEXT_410_PUT));
+    }
+
+    @Test
+    public void testPutSameBody() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        given().body(JsonUtil.get().toJson(person)).when().put("/person/" + person.getId())
+                .then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(person));
     }
 
     @Test
