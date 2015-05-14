@@ -58,9 +58,23 @@ public class EndpointFeatureTest {
     @Test
     public void testClearRoutes() {
         get("/custom_endpoint").then().assertThat().statusCode(200);
+        get("/ping").then().assertThat().statusCode(200);
 
         iona.clearRoutes();
 
         get("/custom_endpoint").then().assertThat().statusCode(404);
+        get("/ping").then().assertThat().statusCode(404);
+    }
+
+    @Test
+    public void testAPIContext() {
+        get("/custom_endpoint").then().assertThat().statusCode(200);
+
+        ValidatableResponse response = given().body("{}").when().post("/custom_endpoint").then().assertThat().statusCode(201);
+
+        int id = from(response.extract().asString()).get("id");
+
+        given().body("{\"social_number\":3}").when().put("/custom_endpoint/" + id).then().assertThat().statusCode(200);
+        delete("/custom_endpoint/" + id).then().assertThat().statusCode(204);
     }
 }

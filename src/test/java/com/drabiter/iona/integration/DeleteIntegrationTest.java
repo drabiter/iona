@@ -57,11 +57,11 @@ public class DeleteIntegrationTest {
         iona.add(Person.class);
         Thread.sleep(1500);
 
-        delete("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.HTML_404);
+        delete("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
 
         iona.getDatabase().getDao(Person.class).create(person);
 
-        delete("/person/" + (person.getId() + 999)).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.HTML_404);
+        delete("/person/" + (person.getId() + 999)).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
         delete("/person/" + person.getId()).then().assertThat().statusCode(204).contentType(isEmptyString()).body(isEmptyString());
     }
 }

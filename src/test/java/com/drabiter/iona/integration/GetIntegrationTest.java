@@ -58,7 +58,7 @@ public class GetIntegrationTest {
         iona.add(Person.class);
         Thread.sleep(1500);
 
-        get("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.HTML_404);
+        get("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
 
         iona.getDatabase().getDao(Person.class).create(person);
 
@@ -66,7 +66,7 @@ public class GetIntegrationTest {
         String jsons = JsonUtil.get().toJson(new Person[] { person });
 
         get("/person/" + person.getId()).then().assertThat().statusCode(200).contentType(ContentType.JSON).body(equalToIgnoringCase(json));
-        get("/person/" + (person.getId() + 999)).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.HTML_404);
+        get("/person/" + (person.getId() + 999)).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
         get("/person").then().assertThat().statusCode(200).contentType(ContentType.JSON).body(equalToIgnoringCase(jsons));
     }
 }

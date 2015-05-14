@@ -17,10 +17,8 @@ import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.ValidatableResponse;
 
 import static com.jayway.restassured.RestAssured.*;
-import static com.jayway.restassured.path.json.JsonPath.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -56,6 +54,22 @@ public class PutIntegrationTest {
     }
 
     @Test
+    public void testPutNotExist() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        given().body(JsonUtil.get().toJson(person)).when().put("/person/" + (person.getId() + 999))
+                .then().assertThat().statusCode(410).contentType(ContentType.TEXT).body(equalTo(Helper.TEXT_410_PUT));
+    }
+
+    @Test
     public void testPutNotCreated() throws Exception {
         sharedTestPutFail(410, Helper.TEXT_410_PUT, 0);
     }
@@ -75,15 +89,14 @@ public class PutIntegrationTest {
         Thread.sleep(1500);
 
         Person person = new Person();
+        person.setId(1L);
         person.setFirstName("A");
         person.setLastName("B");
 
-        ValidatableResponse response = given().body(JsonUtil.get().toJson(person)).when().post("/person")
-                .then().assertThat().statusCode(201);
+        iona.getDatabase().getDao(Person.class).create(person);
 
-        given().body(JsonUtil.get().toJson(person)).when().put("/person/" + from(response.extract().asString()).get("id"))
+        given().body(JsonUtil.get().toJson(person)).when().put("/person/" + person.getId())
                 .then().assertThat().statusCode(expectedCode).contentType(ContentType.TEXT).body(equalTo(expectedMessage));
-        verify(spiedDatabase, times(1)).create(any(), any());
+        verify(spiedDatabase, times(1)).update(any(), any());
     }
-
 }

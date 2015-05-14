@@ -8,7 +8,7 @@ public class Helper {
 
     public static final int TEST_PORT = 4568;
 
-    public static final Matcher<String> HTML_404 = equalTo("<html><body><h2>404 Not found</h2></body></html>");
+    public static final Matcher<String> MATCHER_HTML_404 = equalTo("<html><body><h2>404 Not found</h2></body></html>");
 
     public static final String TEXT_409 = "Conflict resources";
 
