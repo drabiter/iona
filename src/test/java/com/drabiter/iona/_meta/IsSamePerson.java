@@ -1,5 +1,6 @@
 package com.drabiter.iona._meta;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
@@ -23,8 +24,8 @@ public class IsSamePerson<T> extends BaseMatcher<T> {
 
         Person actualPerson = JsonUtil.get().fromJson((String) actualValue, Person.class);
 
-        return expectedValue.getFirstName().equals(actualPerson.getFirstName())
-                && expectedValue.getLastName().equals(actualPerson.getLastName());
+        return StringUtils.equals(expectedValue.getFirstName(), actualPerson.getFirstName())
+                && StringUtils.equals(expectedValue.getLastName(), actualPerson.getLastName());
     }
 
     @Override

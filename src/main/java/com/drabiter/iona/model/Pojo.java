@@ -41,4 +41,10 @@ public class Pojo {
     public static Property get(Class<?> modelClass) {
         return properties.get(modelClass);
     }
+
+    public static Object getId(Object instance) throws IllegalArgumentException, IllegalAccessException {
+        Field idField = Pojo.get(instance.getClass()).getIdField();
+        idField.setAccessible(true);
+        return idField.get(instance);
+    }
 }

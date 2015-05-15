@@ -14,7 +14,9 @@ import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.exception.IonaException;
+import com.drabiter.iona.http.Header;
 import com.drabiter.iona.util.JsonUtil;
+import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
@@ -35,6 +37,8 @@ public class PostIntegrationTest {
     public static void setup() throws Exception {
         iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT);
         originalDatabase = iona.getDatabase();
+
+        TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
     }
 
     @AfterClass
@@ -68,6 +72,42 @@ public class PostIntegrationTest {
 
         given().body(JsonUtil.get().toJson(person)).when().post("/person")
                 .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testPostEmptyBody() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        person.setFirstName(null);
+        person.setLastName(null);
+
+        given().body("{}").when().post("/person")
+                .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testPostResponseLocationHeader() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        given().body(JsonUtil.get().toJson(person)).when().post("/person")
+                .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person))
+                .header(Header.Location.value(), equalTo("http://localhost:4568/person/" + (person.getId() + 1)));
     }
 
     @Test

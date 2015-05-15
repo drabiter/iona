@@ -1,18 +1,15 @@
 package com.drabiter.iona.http;
 
-public enum ContentType {
-
-    JSON("application/json"),
-    TEXT("text/plain");
+public enum Header {
+    Location("Location");
 
     private String value;
 
-    ContentType(String value) {
+    private Header(String value) {
         this.value = value;
     }
 
     public String value() {
         return value;
     }
-
 }

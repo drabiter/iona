@@ -1,11 +1,11 @@
 package com.drabiter.iona.route;
 
-import java.sql.SQLException;
-
 import spark.Request;
 import spark.Response;
 
 import com.drabiter.iona.IonaResource;
+import com.drabiter.iona.http.Header;
+import com.drabiter.iona.model.Pojo;
 import com.drabiter.iona.util.JsonUtil;
 
 public class PostRoute<T, I> extends BasicRoute<T, I> {
@@ -15,7 +15,7 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
     }
 
     @Override
-    public Object handle(Request request, Response response) throws SQLException {
+    public Object handle(Request request, Response response) throws Exception {
         String body = request.body();
 
         T instance = JsonUtil.get().fromJson(body, modelClass);
@@ -27,6 +27,8 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
         int affected = iona.getDatabase().create(modelClass, instance);
 
         if (affected == 1) {
+            response.header(Header.Location.value(), request.url() + "/" + Pojo.getId(instance));
+
             return response201(response, instance);
         } else if (affected > 1) {
             return response409(response, "Conflict resources");

@@ -18,12 +18,12 @@ import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
+import static com.drabiter.iona._meta.IsSamePerson.*;
 import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static spark.SparkBase.*;
-import static com.drabiter.iona._meta.IsSamePerson.*;
 
 public class PutIntegrationTest {
 
@@ -83,6 +83,25 @@ public class PutIntegrationTest {
         iona.getDatabase().getDao(Person.class).create(person);
 
         given().body(JsonUtil.get().toJson(person)).when().put("/person/" + person.getId())
+                .then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testPutEmptyBody() throws Exception {
+        iona.add(Person.class);
+        Thread.sleep(1500);
+
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("A");
+        person.setLastName("B");
+
+        iona.getDatabase().getDao(Person.class).create(person);
+
+        person.setFirstName(null);
+        person.setLastName(null);
+
+        given().body("{}").when().put("/person/" + person.getId())
                 .then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(person));
     }
 
