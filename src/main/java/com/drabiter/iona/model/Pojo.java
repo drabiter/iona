@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
-import com.drabiter.iona.util.ModelUtil;
+import com.drabiter.iona.util.PojoUtil;
 
 public class Pojo {
 
@@ -16,10 +16,10 @@ public class Pojo {
     public static Property register(Class<?> modelClass) throws IonaException {
         Property property = new Property();
         property.setModelClass(modelClass);
-        property.setEndpoint(ModelUtil.getEndpoint(modelClass));
+        property.setEndpoint(PojoUtil.getEndpoint(modelClass));
 
         try {
-            Field idField = ModelUtil.findIdField(modelClass);
+            Field idField = PojoUtil.findIdField(modelClass);
 
             property.setIdField(idField);
             property.setIdClass(idField.getType());
@@ -35,7 +35,7 @@ public class Pojo {
     public static void setId(Object instance, String id) throws Exception {
         Field idField = Pojo.get(instance.getClass()).getIdField();
         idField.setAccessible(true);
-        idField.set(instance, ModelUtil.castId(id, idField.getType()));
+        idField.set(instance, PojoUtil.castId(id, idField.getType()));
     }
 
     public static Property get(Class<?> modelClass) {

@@ -13,7 +13,7 @@ import com.drabiter.iona.annotation.MentalModel;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
 
-public class ModelUtil {
+public class PojoUtil {
 
     public static Field findIdField(Class<?> clazz) throws IntrospectionException, NoSuchFieldException, SecurityException, IonaException {
         for (Field field : clazz.getDeclaredFields()) {

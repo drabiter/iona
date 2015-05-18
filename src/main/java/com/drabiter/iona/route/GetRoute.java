@@ -6,7 +6,7 @@ import spark.Request;
 import spark.Response;
 
 import com.drabiter.iona.IonaResource;
-import com.drabiter.iona.util.ModelUtil;
+import com.drabiter.iona.util.PojoUtil;
 import com.j256.ormlite.dao.Dao;
 
 public class GetRoute<T, I> extends BasicRoute<T, I> {
@@ -27,7 +27,7 @@ public class GetRoute<T, I> extends BasicRoute<T, I> {
         }
 
         Dao<T, I> dao = (Dao<T, I>) iona.getDatabase().getDao(modelClass);
-        T entity = dao.queryForId((I) ModelUtil.castId(id, idClass));
+        T entity = dao.queryForId((I) PojoUtil.castId(id, idClass));
 
         if (entity == null) {
             return response404(response);

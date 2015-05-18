@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.drabiter.iona.annotation.MentalModel;
 import com.drabiter.iona.exception.IonaException;
-import com.drabiter.iona.util.ModelUtil;
+import com.drabiter.iona.util.PojoUtil;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -18,7 +18,7 @@ public class ModelUtilTest {
 
     @Test
     public void testGetIdPublicField() throws Exception {
-        Field field = ModelUtil.findIdField(PublicFoo.class);
+        Field field = PojoUtil.findIdField(PublicFoo.class);
 
         assertNotNull(field);
         assertEquals("myId", field.getName());
@@ -26,7 +26,7 @@ public class ModelUtilTest {
 
     @Test
     public void testGetIdPrivateField() throws Exception {
-        Field field = ModelUtil.findIdField(PrivateFoo.class);
+        Field field = PojoUtil.findIdField(PrivateFoo.class);
 
         assertNotNull(field);
         assertEquals("myId", field.getName());
@@ -34,50 +34,50 @@ public class ModelUtilTest {
 
     @Test(expected = IonaException.class)
     public void testNotFoundIdField() throws Exception {
-        ModelUtil.findIdField(CustomEndpoint.class);
+        PojoUtil.findIdField(CustomEndpoint.class);
     }
 
     @Test
     public void testGetClassCustomEndpoint() throws Exception {
-        assertThat(ModelUtil.getEndpoint(CustomEndpoint.class)).isEqualTo("/endpoint");
+        assertThat(PojoUtil.getEndpoint(CustomEndpoint.class)).isEqualTo("/endpoint");
     }
 
     @Test
     public void testGetParentClassCustomEndpoint() throws Exception {
-        assertThat(ModelUtil.getEndpoint(NoCustomEndpoint.class)).isEqualTo("/endpoint");
+        assertThat(PojoUtil.getEndpoint(NoCustomEndpoint.class)).isEqualTo("/endpoint");
     }
 
     @Test
     public void testGetChildCustomEndpoint() throws Exception {
-        assertThat(ModelUtil.getEndpoint(AnotherCustomEndpoint.class)).isEqualTo("/anotherendpoint");
+        assertThat(PojoUtil.getEndpoint(AnotherCustomEndpoint.class)).isEqualTo("/anotherendpoint");
     }
 
     @Test
     public void testCastIdString() throws Exception {
-        assertThat(ModelUtil.castId("", String.class)).isEqualTo("");
-        assertThat(ModelUtil.castId(" ", String.class)).isEqualTo(" ");
-        assertThat(ModelUtil.castId("abc", String.class)).isEqualTo("abc");
-        assertThat(ModelUtil.castId(null, String.class)).isNull();
+        assertThat(PojoUtil.castId("", String.class)).isEqualTo("");
+        assertThat(PojoUtil.castId(" ", String.class)).isEqualTo(" ");
+        assertThat(PojoUtil.castId("abc", String.class)).isEqualTo("abc");
+        assertThat(PojoUtil.castId(null, String.class)).isNull();
     }
 
     @Test
     public void testCastIdLong() throws Exception {
-        assertThat(ModelUtil.castId("1", long.class)).isEqualTo(1L);
+        assertThat(PojoUtil.castId("1", long.class)).isEqualTo(1L);
 
         try {
-            ModelUtil.castId(null, long.class);
+            PojoUtil.castId(null, long.class);
             fail();
         } catch (NumberFormatException e) {
         }
 
         try {
-            ModelUtil.castId("", long.class);
+            PojoUtil.castId("", long.class);
             fail();
         } catch (NumberFormatException e) {
         }
 
         try {
-            ModelUtil.castId(" ", long.class);
+            PojoUtil.castId(" ", long.class);
             fail();
         } catch (NumberFormatException e) {
         }
@@ -85,7 +85,7 @@ public class ModelUtilTest {
 
     @Test(expected = IonaException.class)
     public void testCastIdUnsupportedType() throws Exception {
-        ModelUtil.castId("2.9", Double.class);
+        PojoUtil.castId("2.9", Double.class);
     }
 
     class PublicFoo {
