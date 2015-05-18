@@ -28,8 +28,6 @@ public class RestIntegrationTest {
     @BeforeClass
     public static void setup() throws Exception {
         Helper.getIona().add(Person.class);
-
-        Thread.sleep(1500);
     }
 
     @AfterClass

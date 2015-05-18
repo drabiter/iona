@@ -46,6 +46,8 @@ public class Iona implements IonaResource {
 
         Rest.register(this, property.getEndpoint(), modelClass, property.getIdClass());
 
+        SparkBase.awaitInitialization();
+
         return this;
     }
 

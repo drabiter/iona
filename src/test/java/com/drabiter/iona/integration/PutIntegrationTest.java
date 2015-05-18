@@ -57,7 +57,6 @@ public class PutIntegrationTest {
     @Test
     public void testPutNotExist() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -73,7 +72,6 @@ public class PutIntegrationTest {
     @Test
     public void testPutSameBody() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -89,7 +87,6 @@ public class PutIntegrationTest {
     @Test
     public void testPutEmptyBody() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -122,7 +119,6 @@ public class PutIntegrationTest {
         TestUtils.setIonaDatabase(iona, spiedDatabase);
 
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);

@@ -1,9 +1,7 @@
 package com.drabiter.iona.feature;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
@@ -19,28 +17,19 @@ import static spark.SparkBase.*;
 
 public class EndpointFeatureTest {
 
-    private static Iona iona;
-
-    @BeforeClass
-    public static void setup() {
-        port(Helper.TEST_PORT);
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        stop();
-    }
+    private Iona iona;
 
     @Before
     public void before() throws IonaException {
         RestAssured.port = Helper.TEST_PORT;
 
-        iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").add(CustomPerson.class);
+        iona = Helper.getIona().add(CustomPerson.class);
     }
 
     @After
     public void after() {
         RestAssured.reset();
+        stop();
     }
 
     @Test

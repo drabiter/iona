@@ -61,7 +61,6 @@ public class PostIntegrationTest {
     @Test
     public void testPostDuplicate() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -77,7 +76,6 @@ public class PostIntegrationTest {
     @Test
     public void testPostEmptyBody() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -96,7 +94,6 @@ public class PostIntegrationTest {
     @Test
     public void testPostResponseLocationHeader() throws Exception {
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setId(1L);
@@ -127,7 +124,6 @@ public class PostIntegrationTest {
         TestUtils.setIonaDatabase(iona, spiedDatabase);
 
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         Person person = new Person();
         person.setFirstName("A");

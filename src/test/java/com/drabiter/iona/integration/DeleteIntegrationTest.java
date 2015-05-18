@@ -55,7 +55,6 @@ public class DeleteIntegrationTest {
         person.setLastName("Takeshi");
 
         iona.add(Person.class);
-        Thread.sleep(1500);
 
         delete("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
 
