@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import static org.junit.Assert.*;
 
-public class ModelUtilTest {
+public class PojoUtilTest {
 
     @Test
     public void testGetIdPublicField() throws Exception {

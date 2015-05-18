@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.util.JsonUtil;
@@ -28,7 +27,7 @@ public class RestIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT).add(Person.class);
+        Helper.getIona().add(Person.class);
 
         Thread.sleep(1500);
     }

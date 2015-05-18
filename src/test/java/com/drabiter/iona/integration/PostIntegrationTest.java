@@ -35,7 +35,7 @@ public class PostIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT);
+        iona = Helper.getIona();
         originalDatabase = iona.getDatabase();
 
         TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);

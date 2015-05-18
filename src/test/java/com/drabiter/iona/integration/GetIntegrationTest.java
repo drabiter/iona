@@ -27,7 +27,7 @@ public class GetIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(Helper.TEST_PORT);
+        iona = Helper.getIona();
     }
 
     @AfterClass
