@@ -44,5 +44,13 @@ DELETE  /person/:id   # delete person :id
 ```
 More on [REST](https://github.com/drabiter/iona/wiki/REST-Specification).
 
+## features
+**Custom endpoint**
+```
+@MentalModel(endpoint = "people")
+public class Person {..}
+```
+The class will be registered under `/people` endpoint.
+
 ## specification
-Tested on MariaDB 10.0.17
+Tested on MariaDB 10.0.17, Java 1.8.0_25
