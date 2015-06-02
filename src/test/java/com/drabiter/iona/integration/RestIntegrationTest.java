@@ -27,7 +27,7 @@ public class RestIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Helper.getIona().add(Person.class);
+        Helper.getIona().add(Person.class).start();
     }
 
     @AfterClass

@@ -44,17 +44,24 @@ public class Iona implements IonaResource {
             throw ExceptionFactory.failDatabase(e);
         }
 
-        Rest.register(this, property.getEndpoint(), modelClass, property.getIdClass());
-
-        SparkBase.awaitInitialization();
-
         return this;
     }
 
-    public Iona clearRoutes() {
-        RouteMatcherFactory.get().clearRoutes();
+    public void start() {
+        for (Class<?> modelClass : Pojo.getClasses()) {
+            Property property = Pojo.get(modelClass);
+            Rest.register(this, property.getEndpoint(), modelClass, property.getIdClass());
+        }
 
-        return this;
+        SparkBase.awaitInitialization();
+    }
+
+    public static void stop() {
+        SparkBase.stop();
+    }
+
+    public static void clearRoutes() {
+        RouteMatcherFactory.get().clearRoutes();
     }
 
     @Override

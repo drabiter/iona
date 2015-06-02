@@ -17,13 +17,11 @@ import static spark.SparkBase.*;
 
 public class EndpointFeatureTest {
 
-    private Iona iona;
-
     @Before
     public void before() throws IonaException {
         RestAssured.port = Helper.TEST_PORT;
 
-        iona = Helper.getIona().add(CustomPerson.class);
+        Helper.getIona().add(CustomPerson.class).start();
     }
 
     @After
@@ -49,7 +47,7 @@ public class EndpointFeatureTest {
         get("/custom_endpoint").then().assertThat().statusCode(200);
         get("/ping").then().assertThat().statusCode(200);
 
-        iona.clearRoutes();
+        Iona.clearRoutes();
 
         get("/custom_endpoint").then().assertThat().statusCode(404);
         get("/ping").then().assertThat().statusCode(404);

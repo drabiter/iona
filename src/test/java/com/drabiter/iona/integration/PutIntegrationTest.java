@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import spark.route.RouteMatcherFactory;
-
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
@@ -33,7 +31,7 @@ public class PutIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona();
+        iona = Helper.getIona().add(Person.class);
         originalDatabase = iona.getDatabase();
     }
 
@@ -45,7 +43,7 @@ public class PutIntegrationTest {
     @Before
     public void before() throws IonaException {
         RestAssured.port = Helper.TEST_PORT;
-        RouteMatcherFactory.get().clearRoutes();
+        Iona.clearRoutes();
     }
 
     @After
@@ -56,7 +54,7 @@ public class PutIntegrationTest {
 
     @Test
     public void testPutNotExist() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -71,7 +69,7 @@ public class PutIntegrationTest {
 
     @Test
     public void testPutSameBody() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -86,7 +84,7 @@ public class PutIntegrationTest {
 
     @Test
     public void testPutEmptyBody() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -118,7 +116,7 @@ public class PutIntegrationTest {
 
         TestUtils.setIonaDatabase(iona, spiedDatabase);
 
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);

@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import spark.route.RouteMatcherFactory;
-
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
@@ -19,7 +17,6 @@ import com.jayway.restassured.http.ContentType;
 
 import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
-import static spark.SparkBase.*;
 
 public class GetIntegrationTest {
 
@@ -32,13 +29,13 @@ public class GetIntegrationTest {
 
     @AfterClass
     public static void tearDown() {
-        stop();
+        Iona.stop();
     }
 
     @Before
     public void before() throws IonaException {
         RestAssured.port = Helper.TEST_PORT;
-        RouteMatcherFactory.get().clearRoutes();
+        Iona.clearRoutes();
     }
 
     @After
@@ -55,7 +52,7 @@ public class GetIntegrationTest {
         person.setFirstName("Hongo");
         person.setLastName("Takeshi");
 
-        iona.add(Person.class);
+        iona.add(Person.class).start();
 
         get("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
 

@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import spark.route.RouteMatcherFactory;
-
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
@@ -25,7 +23,6 @@ import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-import static spark.SparkBase.*;
 
 public class PostIntegrationTest {
 
@@ -35,7 +32,7 @@ public class PostIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona();
+        iona = Helper.getIona().add(Person.class);
         originalDatabase = iona.getDatabase();
 
         TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
@@ -43,13 +40,12 @@ public class PostIntegrationTest {
 
     @AfterClass
     public static void tearDown() {
-        stop();
+        Iona.stop();
     }
 
     @Before
     public void before() throws IonaException {
         RestAssured.port = Helper.TEST_PORT;
-        RouteMatcherFactory.get().clearRoutes();
     }
 
     @After
@@ -60,7 +56,7 @@ public class PostIntegrationTest {
 
     @Test
     public void testPostDuplicate() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -75,7 +71,7 @@ public class PostIntegrationTest {
 
     @Test
     public void testPostEmptyBody() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -93,7 +89,7 @@ public class PostIntegrationTest {
 
     @Test
     public void testPostResponseLocationHeader() throws Exception {
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setId(1L);
@@ -123,7 +119,7 @@ public class PostIntegrationTest {
 
         TestUtils.setIonaDatabase(iona, spiedDatabase);
 
-        iona.add(Person.class);
+        iona.start();
 
         Person person = new Person();
         person.setFirstName("A");

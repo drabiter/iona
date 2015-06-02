@@ -4,6 +4,7 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
@@ -32,14 +33,22 @@ public class Pojo {
         return property;
     }
 
+    public static Property get(Class<?> modelClass) {
+        return properties.get(modelClass);
+    }
+
+    public static Set<Class<?>> getClasses() {
+        return properties.keySet();
+    }
+
+    public static void clear() {
+        properties.clear();
+    }
+
     public static void setId(Object instance, String id) throws Exception {
         Field idField = Pojo.get(instance.getClass()).getIdField();
         idField.setAccessible(true);
         idField.set(instance, PojoUtil.castId(id, idField.getType()));
-    }
-
-    public static Property get(Class<?> modelClass) {
-        return properties.get(modelClass);
     }
 
     public static Object getId(Object instance) throws IllegalArgumentException, IllegalAccessException {
@@ -47,4 +56,5 @@ public class Pojo {
         idField.setAccessible(true);
         return idField.get(instance);
     }
+
 }

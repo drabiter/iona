@@ -12,7 +12,10 @@ REST API quickly. No XML, YAML, or any configuration. Annotate the model, invoke
 Complete utilization,
 ```java
 public static void main(String[] args) throws IonaException {
-    Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(8080).add(Person.class);
+    Iona.init("jdbc:mysql://localhost:3306/iona", "root", "")
+        .port(8080)
+        .add(Person.class)
+        .start();
 }
 ```
 After prepared the model with [ORMLite](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Local-Annotations) or [javax.persistence](http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_2.html#Javax-Persistence-Annotations) annotations,
