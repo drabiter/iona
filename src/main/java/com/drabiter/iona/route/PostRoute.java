@@ -7,6 +7,7 @@ import com.drabiter.iona.IonaResource;
 import com.drabiter.iona.http.Header;
 import com.drabiter.iona.model.Pojo;
 import com.drabiter.iona.util.JsonUtil;
+import com.google.gson.JsonSyntaxException;
 
 public class PostRoute<T, I> extends BasicRoute<T, I> {
 
@@ -18,10 +19,14 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
     public Object handle(Request request, Response response) throws Exception {
         String body = request.body();
 
-        T instance = JsonUtil.get().fromJson(body, modelClass);
+        T instance = null;
 
-        if (instance == null) {
-            return response400(response);
+        try {
+            instance = JsonUtil.get().fromJson(body, modelClass);
+        } catch (JsonSyntaxException jse) {
+            return response400(response, jse.getMessage());
+        } finally {
+            if (instance == null) return response400(response);
         }
 
         int affected = iona.getDatabase().create(modelClass, instance);

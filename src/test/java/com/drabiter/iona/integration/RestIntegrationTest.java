@@ -15,6 +15,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.ValidatableResponse;
 
+import static com.drabiter.iona._meta.IsSamePerson.*;
 import static com.drabiter.iona._meta.PersonAssert.*;
 import static com.jayway.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
@@ -108,24 +109,20 @@ public class RestIntegrationTest {
         assertThat(returned.getFirstName()).isEqualTo("A");
         assertThat(returned.getLastName()).isEqualTo("B");
 
-        Person update = new Person();
-        update.setFirstName("X");
+        Person updated = new Person();
+        updated.setFirstName("X");
 
-        ValidatableResponse putResponse = given().body(JsonUtil.get().toJson(update)).when().put("/person/" + returned.getId())
-                .then().assertThat().statusCode(200).contentType(ContentType.JSON);
-
-        Person put = JsonUtil.get().fromJson(putResponse.extract().body().asString(), Person.class);
-
-        assertThat(put).isNotNull().hasId(returned.getId()).hasFirstName("X").hasLastName(null);
+        given().body(JsonUtil.get().toJson(updated)).when().put("/person/" + returned.getId())
+                .then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(updated));
 
         Person read = readByGetOnId(returned.getId());
 
-        assertThat(read).isNotNull().hasId(put.getId()).hasFirstName(put.getFirstName()).hasLastName(put.getLastName());
+        assertThat(read).isNotNull().hasFirstName(updated.getFirstName()).hasLastName(updated.getLastName());
     }
 
     private Person createByPost(Person person) {
         ValidatableResponse createResponse = given().body(JsonUtil.get().toJson(person)).when().post("/person")
-                .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(notNullValue());
+                .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person));
 
         return JsonUtil.get().fromJson(createResponse.extract().body().asString(), Person.class);
     }

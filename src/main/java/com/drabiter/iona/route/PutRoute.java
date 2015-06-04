@@ -6,6 +6,7 @@ import spark.Response;
 import com.drabiter.iona.IonaResource;
 import com.drabiter.iona.model.Pojo;
 import com.drabiter.iona.util.JsonUtil;
+import com.google.gson.JsonSyntaxException;
 
 public class PutRoute<T, I> extends BasicRoute<T, I> {
 
@@ -18,14 +19,14 @@ public class PutRoute<T, I> extends BasicRoute<T, I> {
         String body = request.body();
         String id = request.params("id");
 
-        if (id == null) {
-            return response404(response);
-        }
+        T instance = null;
 
-        T instance = JsonUtil.get().fromJson(body, modelClass);
-
-        if (instance == null) {
-            return response400(response);
+        try {
+            instance = JsonUtil.get().fromJson(body, modelClass);
+        } catch (JsonSyntaxException jse) {
+            return response400(response, jse.getMessage());
+        } finally {
+            if (instance == null) return response400(response);
         }
 
         Pojo.setId(instance, id);

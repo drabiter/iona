@@ -49,7 +49,7 @@ public class PutIntegrationTest {
     @After
     public void after() throws Exception {
         TestUtils.setIonaDatabase(iona, originalDatabase);
-        RestAssured.reset();
+        reset();
     }
 
     @Test
@@ -83,7 +83,7 @@ public class PutIntegrationTest {
     }
 
     @Test
-    public void testPutEmptyBody() throws Exception {
+    public void testPutEmptyJson() throws Exception {
         iona.start();
 
         Person person = new Person();
@@ -98,6 +98,31 @@ public class PutIntegrationTest {
 
         given().body("{}").when().put("/person/" + person.getId())
                 .then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testPutEmptyBody() throws Exception {
+        iona.start();
+
+        given().body("").when().put("/person/999")
+                .then().assertThat().statusCode(400).contentType(ContentType.HTML).body(notNullValue());
+
+    }
+
+    @Test
+    public void testPutNoBody() throws Exception {
+        iona.start();
+
+        given().when().put("/person/999")
+                .then().assertThat().statusCode(400).contentType(ContentType.HTML).body(notNullValue());
+    }
+
+    @Test
+    public void testPutMalformedJson() throws Exception {
+        iona.start();
+
+        given().body("aaa").when().put("/person/999")
+                .then().assertThat().statusCode(400).body(notNullValue());
     }
 
     @Test

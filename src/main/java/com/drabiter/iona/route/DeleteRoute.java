@@ -18,10 +18,6 @@ public class DeleteRoute<T, I> extends BasicRoute<T, I> {
     public Object handle(Request request, Response response) throws Exception {
         String id = request.params("id");
 
-        if (id == null) {
-            return response404(response);
-        }
-
         Dao<T, I> dao = (Dao<T, I>) iona.getDatabase().getDao(modelClass);
         int affected = dao.deleteById((I) PojoUtil.castId(id, idClass));
 

@@ -11,7 +11,6 @@ import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.db.Database;
-import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.http.Header;
 import com.drabiter.iona.util.JsonUtil;
 import com.j256.ormlite.table.TableUtils;
@@ -34,8 +33,6 @@ public class PostIntegrationTest {
     public static void setup() throws Exception {
         iona = Helper.getIona().add(Person.class);
         originalDatabase = iona.getDatabase();
-
-        TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
     }
 
     @AfterClass
@@ -44,7 +41,8 @@ public class PostIntegrationTest {
     }
 
     @Before
-    public void before() throws IonaException {
+    public void before() throws Exception {
+        TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
         RestAssured.port = Helper.TEST_PORT;
     }
 
@@ -70,7 +68,7 @@ public class PostIntegrationTest {
     }
 
     @Test
-    public void testPostEmptyBody() throws Exception {
+    public void testPostEmptyJson() throws Exception {
         iona.start();
 
         Person person = new Person();
@@ -85,6 +83,31 @@ public class PostIntegrationTest {
 
         given().body("{}").when().post("/person")
                 .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testPostEmptyBody() throws Exception {
+        iona.start();
+
+        given().body("").when().post("/person")
+                .then().assertThat().statusCode(400).contentType(ContentType.HTML).body(notNullValue());
+
+    }
+
+    @Test
+    public void testPostNoBody() throws Exception {
+        iona.start();
+
+        given().when().post("/person")
+                .then().assertThat().statusCode(400).contentType(ContentType.HTML).body(notNullValue());
+    }
+
+    @Test
+    public void testPostMalformedJson() throws Exception {
+        iona.start();
+
+        given().body("aaa").when().post("/person")
+                .then().assertThat().statusCode(400).body(notNullValue());
     }
 
     @Test

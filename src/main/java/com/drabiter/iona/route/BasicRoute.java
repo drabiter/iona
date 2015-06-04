@@ -41,8 +41,12 @@ public abstract class BasicRoute<T, I> implements Route {
     }
 
     protected Object response400(Response response) {
+        return response400(response, "Invalid Body");
+    }
+
+    protected Object response400(Response response, String message) {
         response.status(HttpURLConnection.HTTP_BAD_REQUEST);
-        return null;
+        return message;
     }
 
     protected Object response404(Response response) {

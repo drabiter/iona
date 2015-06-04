@@ -9,12 +9,12 @@ import org.junit.Test;
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Helper;
 import com.drabiter.iona._meta.Person;
-import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.util.JsonUtil;
 import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
+import static com.drabiter.iona._meta.IsSamePerson.*;
 import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
@@ -24,7 +24,7 @@ public class GetIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona();
+        iona = Helper.getIona().add(Person.class);
     }
 
     @AfterClass
@@ -33,7 +33,8 @@ public class GetIntegrationTest {
     }
 
     @Before
-    public void before() throws IonaException {
+    public void before() throws Exception {
+        TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
         RestAssured.port = Helper.TEST_PORT;
         Iona.clearRoutes();
     }
@@ -44,25 +45,46 @@ public class GetIntegrationTest {
     }
 
     @Test
-    public void testGet() throws Exception {
-        TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
-
+    public void testGetSingle() throws Exception {
         Person person = new Person();
         person.setId(1L);
         person.setFirstName("Hongo");
         person.setLastName("Takeshi");
 
-        iona.add(Person.class).start();
-
-        get("/person/" + person.getId()).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
-
         iona.getDatabase().getDao(Person.class).create(person);
 
-        String json = JsonUtil.get().toJson(person);
-        String jsons = JsonUtil.get().toJson(new Person[] { person });
+        iona.start();
 
-        get("/person/" + person.getId()).then().assertThat().statusCode(200).contentType(ContentType.JSON).body(equalToIgnoringCase(json));
-        get("/person/" + (person.getId() + 999)).then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
+        get("/person/" + person.getId()).then().assertThat().statusCode(200).contentType(ContentType.JSON).body(isSamePerson(person));
+    }
+
+    @Test
+    public void testGetMany() throws Exception {
+        Person person1 = new Person();
+        person1.setId(1L);
+        person1.setFirstName("Hongo");
+        person1.setLastName("Takeshi");
+
+        Person person2 = new Person();
+        person2.setId(2L);
+        person2.setFirstName("Ichimonji");
+        person2.setLastName("Hayato");
+
+        iona.getDatabase().getDao(Person.class).create(person1);
+        iona.getDatabase().getDao(Person.class).create(person2);
+
+        iona.start();
+
+        String jsons = JsonUtil.get().toJson(new Person[] { person1, person2 });
+
         get("/person").then().assertThat().statusCode(200).contentType(ContentType.JSON).body(equalToIgnoringCase(jsons));
     }
+
+    @Test
+    public void testGetNotExist() throws Exception {
+        iona.start();
+
+        get("/person/1").then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
+    }
+
 }
