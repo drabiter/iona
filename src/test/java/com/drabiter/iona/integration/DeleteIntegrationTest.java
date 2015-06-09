@@ -27,7 +27,7 @@ public class DeleteIntegrationTest {
 
     @AfterClass
     public static void tearDown() {
-        Iona.stop();
+        iona.stop();
     }
 
     @Before

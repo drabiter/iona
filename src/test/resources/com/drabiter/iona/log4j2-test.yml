@@ -1,0 +1,20 @@
+Configuration:
+  status: warn
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+
+  Loggers:
+    Logger:
+      name: com.drabiter.iona
+      level: info
+        AppenderRef:
+          ref: Console
+    Root:
+      level: error
+      AppenderRef:
+        ref: Console

@@ -37,7 +37,7 @@ public class PostIntegrationTest {
 
     @AfterClass
     public static void tearDown() {
-        Iona.stop();
+        iona.stop();
     }
 
     @Before

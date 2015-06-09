@@ -1,11 +1,11 @@
 package com.drabiter.iona._meta;
 
-import static org.hamcrest.Matchers.*;
-
 import org.hamcrest.Matcher;
 
 import com.drabiter.iona.Iona;
 import com.drabiter.iona.exception.IonaException;
+
+import static org.hamcrest.Matchers.*;
 
 public class Helper {
 

@@ -2,6 +2,9 @@ package com.drabiter.iona;
 
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import spark.SparkBase;
 import spark.route.RouteMatcherFactory;
 
@@ -14,6 +17,8 @@ import com.drabiter.iona.model.Property;
 
 public class Iona implements IonaResource {
 
+    final Logger logger = LoggerFactory.getLogger(Iona.class);
+
     private Database database;
 
     public static Iona init(String url, String user, String password) throws IonaException {
@@ -23,19 +28,23 @@ public class Iona implements IonaResource {
     public Iona(String url, String user, String password) throws IonaException {
         try {
             database = new Database(url, user, password);
+            logger.info("== Connected to {}", url);
         } catch (SQLException e) {
+            logger.error("Could not establish database connection", e);
             throw ExceptionFactory.failPreparingJdbc(e);
         }
     }
 
     public Iona port(int port) {
         SparkBase.port(port);
+        logger.info("== Listening on {}", port);
 
         return this;
     }
 
     public <T, I> Iona add(final Class<T> modelClass) throws IonaException {
         Property property = Pojo.register(modelClass);
+        logger.info("== Added {}", modelClass);
 
         try {
             database.createTable(modelClass);
@@ -54,10 +63,12 @@ public class Iona implements IonaResource {
         }
 
         SparkBase.awaitInitialization();
+        logger.info(">> Started Iona");
     }
 
-    public static void stop() {
+    public void stop() {
         SparkBase.stop();
+        logger.info("<< Stopped Iona");
     }
 
     public static void clearRoutes() {
