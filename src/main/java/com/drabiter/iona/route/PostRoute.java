@@ -32,7 +32,7 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
         int affected = iona.getDatabase().create(modelClass, instance);
 
         if (affected == 1) {
-            response.header(Header.Location.value(), request.url() + "/" + Pojo.getId(instance));
+            response.header(Header.Location.value(), request.pathInfo() + "/" + Pojo.getId(instance));
 
             return response201(response, instance);
         } else if (affected > 1) {

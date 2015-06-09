@@ -123,7 +123,7 @@ public class PostIntegrationTest {
 
         given().body(JsonUtil.get().toJson(person)).when().post("/person")
                 .then().assertThat().statusCode(201).contentType(ContentType.JSON).body(isSamePerson(person))
-                .header(Header.Location.value(), equalTo("http://localhost:4568/person/" + (person.getId() + 1)));
+                .header(Header.Location.value(), equalTo("/person/" + (person.getId() + 1)));
     }
 
     @Test
