@@ -6,10 +6,9 @@ iona
 [travis-img]: http://img.shields.io/travis/drabiter/iona.svg?style=flat-square
 [travis-url]: https://travis-ci.org/drabiter/iona
 
-REST API quickly. No XML, YAML, or any configuration. Annotate the model, invoke, done.
+REST API for your model quickly. No XML, JSON, or YAML, all programmatically.
 
 ## usage
-Complete utilization,
 ```java
 public static void main(String[] args) throws IonaException {
     Iona.init("jdbc:mysql://localhost:3306/iona", "root", "")
@@ -22,35 +21,54 @@ After prepared the model with [ORMLite](http://ormlite.com/javadoc/ormlite-core/
 ```java
 import javax.persistence.*;
 
-@Entity(name = "people_of_sea") // custom table
 public class Person {
     @Id
     @GeneratedValue
     private long id;
 
-    @Column(name = "full_name") // custom column
-    private String name;
+    private String firstName;
+    private String lastName;
 
     // getter..setter
 }
 ```
-Generated API (JSON) based on class name
+Generated API JSON
 ```
 GET     /person       # select all person records
 GET     /person/:id   # select person :id
 POST    /person       # insert new person record
 PUT     /person/:id   # update person :id
 DELETE  /person/:id   # delete person :id
+
+{
+    "id": 1,
+    "first_name": "Foo",
+    "last_name": "Bar"
+}
 ```
 More on [REST](https://github.com/drabiter/iona/wiki/REST-Specification).
 
 ## features
-**Custom endpoint**
+**custom endpoint**
 ```
 @MentalModel(endpoint = "people")
 public class Person {..}
 ```
-The class will be registered under `/people` endpoint.
+The class will be registered under `/people` endpoint instead `person`.
+
+**custom table**
+```
+@Entity(name = "people_of_sea")
+public class Person {..}
+```
+The class will be mapped to `people_of_sea` table instead `person`.
+
+**custom column**
+```
+@Column(name = "full_name")
+private String name;
+```
+The `name` field will be saved in `full_name` column instead `name`.
 
 ## specification
 Tested on MariaDB 10.0.17, Java 1.8.0_25
