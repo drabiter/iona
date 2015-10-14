@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona._meta.Helper;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.util.JsonUtil;
 import com.j256.ormlite.table.TableUtils;
@@ -24,7 +24,7 @@ public class GetIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona().add(Person.class);
+        iona = TestUtils.getIona().add(Person.class);
     }
 
     @AfterClass
@@ -35,7 +35,7 @@ public class GetIntegrationTest {
     @Before
     public void before() throws Exception {
         TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
         Iona.clearRoutes();
     }
 
@@ -84,7 +84,7 @@ public class GetIntegrationTest {
     public void testGetNotExist() throws Exception {
         iona.start();
 
-        get("/person/1").then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
+        get("/person/1").then().assertThat().statusCode(404).contentType(ContentType.HTML).body(TestUtils.MATCHER_HTML_404);
     }
 
 }

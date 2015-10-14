@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona._meta.Helper;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona._meta.Person;
 import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
@@ -22,7 +22,7 @@ public class DeleteIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona().add(Person.class);
+        iona = TestUtils.getIona().add(Person.class);
     }
 
     @AfterClass
@@ -33,7 +33,7 @@ public class DeleteIntegrationTest {
     @Before
     public void before() throws Exception {
         TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
         Iona.clearRoutes();
     }
 
@@ -60,6 +60,6 @@ public class DeleteIntegrationTest {
     public void testDeleteNotExist() throws Exception {
         iona.start();
 
-        delete("/person/1").then().assertThat().statusCode(404).contentType(ContentType.HTML).body(Helper.MATCHER_HTML_404);
+        delete("/person/1").then().assertThat().statusCode(404).contentType(ContentType.HTML).body(TestUtils.MATCHER_HTML_404);
     }
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.CustomPerson;
-import com.drabiter.iona._meta.Helper;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.exception.IonaException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -19,9 +19,9 @@ public class EndpointFeatureTest {
 
     @Before
     public void before() throws IonaException {
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
 
-        Helper.getIona().add(CustomPerson.class).start();
+        TestUtils.getIona().add(CustomPerson.class).start();
     }
 
     @After

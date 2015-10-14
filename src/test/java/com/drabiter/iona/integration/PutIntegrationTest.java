@@ -7,9 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona._meta.Helper;
-import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.TestUtils;
+import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.util.JsonUtil;
@@ -31,7 +30,7 @@ public class PutIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona().add(Person.class);
+        iona = TestUtils.getIona().add(Person.class);
         originalDatabase = iona.getDatabase();
     }
 
@@ -42,7 +41,7 @@ public class PutIntegrationTest {
 
     @Before
     public void before() throws IonaException {
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
         Iona.clearRoutes();
     }
 
@@ -64,7 +63,7 @@ public class PutIntegrationTest {
         iona.getDatabase().getDao(Person.class).create(person);
 
         given().body(JsonUtil.get().toJson(person)).when().put("/person/" + (person.getId() + 999))
-                .then().assertThat().statusCode(410).contentType(ContentType.TEXT).body(equalTo(Helper.TEXT_410_PUT));
+                .then().assertThat().statusCode(410).contentType(ContentType.TEXT).body(equalTo(TestUtils.TEXT_410_PUT));
     }
 
     @Test
@@ -127,12 +126,12 @@ public class PutIntegrationTest {
 
     @Test
     public void testPutNotCreated() throws Exception {
-        sharedTestPutFail(410, Helper.TEXT_410_PUT, 0);
+        sharedTestPutFail(410, TestUtils.TEXT_410_PUT, 0);
     }
 
     @Test
     public void testPutCreatedMultiple() throws Exception {
-        sharedTestPutFail(409, Helper.TEXT_409, 2);
+        sharedTestPutFail(409, TestUtils.TEXT_409, 2);
     }
 
     private void sharedTestPutFail(int expectedCode, String expectedMessage, int mockValue) throws Exception {

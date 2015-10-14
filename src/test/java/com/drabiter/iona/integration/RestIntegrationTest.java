@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.drabiter.iona._meta.Helper;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.util.JsonUtil;
 import com.jayway.restassured.RestAssured;
@@ -28,7 +28,7 @@ public class RestIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        Helper.getIona().add(Person.class).start();
+        TestUtils.getIona().add(Person.class).start();
     }
 
     @AfterClass
@@ -38,7 +38,7 @@ public class RestIntegrationTest {
 
     @Before
     public void before() {
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
 
         person = new Person();
         person.setFirstName("A");

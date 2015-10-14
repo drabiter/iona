@@ -7,9 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.drabiter.iona.Iona;
-import com.drabiter.iona._meta.Helper;
-import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.TestUtils;
+import com.drabiter.iona._meta.Person;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.http.Header;
 import com.drabiter.iona.util.JsonUtil;
@@ -31,7 +30,7 @@ public class PostIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = Helper.getIona().add(Person.class);
+        iona = TestUtils.getIona().add(Person.class);
         originalDatabase = iona.getDatabase();
     }
 
@@ -43,7 +42,7 @@ public class PostIntegrationTest {
     @Before
     public void before() throws Exception {
         TableUtils.clearTable(iona.getDatabase().getConnectionPool(), Person.class);
-        RestAssured.port = Helper.TEST_PORT;
+        RestAssured.port = TestUtils.TEST_PORT;
     }
 
     @After
@@ -128,12 +127,12 @@ public class PostIntegrationTest {
 
     @Test
     public void testPostNotCreated() throws Exception {
-        sharedTest(410, Helper.TEXT_410_POST, 0);
+        sharedTest(410, TestUtils.TEXT_410_POST, 0);
     }
 
     @Test
     public void testPostCreatedMultiple() throws Exception {
-        sharedTest(409, Helper.TEXT_409, 2);
+        sharedTest(409, TestUtils.TEXT_409, 2);
     }
 
     private void sharedTest(int expectedCode, String expectedMessage, int mockValue) throws Exception {
