@@ -22,7 +22,7 @@ public class TestUtils {
     public static final String TEXT_410_PUT = "No resource modified";
 
     public static Iona getIona() throws IonaException {
-        return Iona.init("jdbc:mysql://localhost:3306/iona", "root", "").port(TEST_PORT);
+        return Iona.init("jdbc:hsqldb:mem:iona", "root", "").port(TEST_PORT);
     }
 
     public static void setIonaDatabase(Object instance, Object value) throws Exception {
