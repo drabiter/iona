@@ -30,7 +30,7 @@ public class PutIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        iona = TestUtils.getIona().add(Person.class);
+        iona = TestUtils.iona().add(Person.class);
         originalDatabase = iona.getDatabase();
     }
 

@@ -21,7 +21,7 @@ public class EndpointFeatureTest {
     public void before() throws IonaException {
         RestAssured.port = TestUtils.TEST_PORT;
 
-        TestUtils.getIona().add(CustomPerson.class).start();
+        TestUtils.iona().add(CustomPerson.class).start();
     }
 
     @After

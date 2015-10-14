@@ -21,7 +21,7 @@ public class TestUtils {
 
     public static final String TEXT_410_PUT = "No resource modified";
 
-    public static Iona getIona() throws IonaException {
+    public static Iona iona() throws IonaException {
         return Iona.init("jdbc:hsqldb:mem:iona", "root", "").port(TEST_PORT);
     }
 

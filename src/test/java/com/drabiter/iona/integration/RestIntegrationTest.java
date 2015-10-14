@@ -28,7 +28,7 @@ public class RestIntegrationTest {
 
     @BeforeClass
     public static void setup() throws Exception {
-        TestUtils.getIona().add(Person.class).start();
+        TestUtils.iona().add(Person.class).start();
     }
 
     @AfterClass
