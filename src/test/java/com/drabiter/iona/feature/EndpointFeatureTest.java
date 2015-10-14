@@ -1,33 +1,42 @@
 package com.drabiter.iona.feature;
 
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import spark.SparkBase;
 
 import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.CustomPerson;
 import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.exception.IonaException;
+import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.ValidatableResponse;
 
 import static com.jayway.restassured.RestAssured.*;
 import static com.jayway.restassured.path.json.JsonPath.*;
-import static spark.SparkBase.*;
 
 public class EndpointFeatureTest {
+
+    private Iona iona;
 
     @Before
     public void before() throws IonaException {
         RestAssured.port = TestUtils.TEST_PORT;
 
-        TestUtils.iona().add(CustomPerson.class).start();
+        iona = TestUtils.iona().add(CustomPerson.class);
+        iona.start();
     }
 
     @After
-    public void after() {
+    public void after() throws SQLException {
+        TableUtils.dropTable(iona.getDatabase().getConnectionPool(), CustomPerson.class, false);
+        SparkBase.stop();
+
         RestAssured.reset();
-        stop();
     }
 
     @Test

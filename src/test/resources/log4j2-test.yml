@@ -15,6 +15,6 @@ Configuration:
         AppenderRef:
           ref: Console
     Root:
-      level: error
+      level: info
       AppenderRef:
         ref: Console

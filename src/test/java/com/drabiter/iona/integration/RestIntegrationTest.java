@@ -1,5 +1,6 @@
 package com.drabiter.iona.integration;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.After;
@@ -8,9 +9,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.drabiter.iona._meta.TestUtils;
+import spark.SparkBase;
+
+import com.drabiter.iona.Iona;
 import com.drabiter.iona._meta.Person;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.util.JsonUtil;
+import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -20,20 +25,23 @@ import static com.drabiter.iona._meta.PersonAssert.*;
 import static com.jayway.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
-import static spark.SparkBase.*;
 
 public class RestIntegrationTest {
+
+    private static Iona iona;
 
     private Person person;
 
     @BeforeClass
     public static void setup() throws Exception {
-        TestUtils.iona().add(Person.class).start();
+        iona = TestUtils.iona().add(Person.class);
+        iona.start();
     }
 
     @AfterClass
-    public static void tearDown() {
-        stop();
+    public static void tearDown() throws SQLException {
+        TableUtils.dropTable(iona.getDatabase().getConnectionPool(), Person.class, false);
+        SparkBase.stop();
     }
 
     @Before

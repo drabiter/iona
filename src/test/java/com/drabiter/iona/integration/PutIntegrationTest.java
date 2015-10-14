@@ -1,17 +1,22 @@
 package com.drabiter.iona.integration;
 
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import spark.SparkBase;
+
 import com.drabiter.iona.Iona;
-import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona._meta.Person;
+import com.drabiter.iona._meta.TestUtils;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.exception.IonaException;
 import com.drabiter.iona.util.JsonUtil;
+import com.j256.ormlite.table.TableUtils;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
@@ -20,7 +25,6 @@ import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-import static spark.SparkBase.*;
 
 public class PutIntegrationTest {
 
@@ -35,8 +39,9 @@ public class PutIntegrationTest {
     }
 
     @AfterClass
-    public static void tearDown() {
-        stop();
+    public static void tearDown() throws SQLException {
+        TableUtils.dropTable(iona.getDatabase().getConnectionPool(), Person.class, false);
+        SparkBase.stop();
     }
 
     @Before
