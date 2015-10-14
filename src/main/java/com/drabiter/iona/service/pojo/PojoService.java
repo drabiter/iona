@@ -1,4 +1,4 @@
-package com.drabiter.iona.model;
+package com.drabiter.iona.service.pojo;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
@@ -8,14 +8,16 @@ import java.util.Set;
 
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
+import com.drabiter.iona.model.Property;
 import com.drabiter.iona.util.PojoUtil;
 
-public class Pojo {
+public class PojoService {
 
     private static Map<Class<?>, Property> properties = new HashMap<>();
 
     public static Property register(Class<?> modelClass) throws IonaException {
         Property property = new Property();
+
         property.setModelClass(modelClass);
         property.setEndpoint(PojoUtil.getEndpoint(modelClass));
 
@@ -46,14 +48,15 @@ public class Pojo {
     }
 
     public static void setId(Object instance, String id) throws Exception {
-        Field idField = Pojo.get(instance.getClass()).getIdField();
+        Field idField = PojoService.get(instance.getClass()).getIdField();
         idField.setAccessible(true);
         idField.set(instance, PojoUtil.castId(id, idField.getType()));
     }
 
     public static Object getId(Object instance) throws IllegalArgumentException, IllegalAccessException {
-        Field idField = Pojo.get(instance.getClass()).getIdField();
+        Field idField = PojoService.get(instance.getClass()).getIdField();
         idField.setAccessible(true);
+
         return idField.get(instance);
     }
 

@@ -4,7 +4,7 @@ import spark.Request;
 import spark.Response;
 
 import com.drabiter.iona.IonaResource;
-import com.drabiter.iona.model.Pojo;
+import com.drabiter.iona.service.pojo.PojoService;
 import com.drabiter.iona.util.JsonUtil;
 import com.google.gson.JsonSyntaxException;
 
@@ -29,7 +29,7 @@ public class PutRoute<T, I> extends BasicRoute<T, I> {
             if (instance == null) return response400(response);
         }
 
-        Pojo.setId(instance, id);
+        PojoService.setId(instance, id);
 
         int affected = iona.getDatabase().update(modelClass, instance);
 

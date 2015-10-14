@@ -1,14 +1,14 @@
-package com.drabiter.iona.pojo;
+package com.drabiter.iona.service.pojo;
 
 import org.junit.Test;
 
 import com.drabiter.iona._meta.Person;
 import com.drabiter.iona._meta.PersonAssert;
-import com.drabiter.iona.model.Pojo;
+import com.drabiter.iona.service.pojo.PojoService;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class PojoTest {
+public class PojoServiceTest {
 
     @Test
     public void testSetId() throws Exception {
@@ -16,8 +16,8 @@ public class PojoTest {
         person.setId(System.currentTimeMillis());
         String id = "99999";
 
-        Pojo.register(Person.class);
-        Pojo.setId(person, id);
+        PojoService.register(Person.class);
+        PojoService.setId(person, id);
 
         PersonAssert.assertThat(person).hasId(Long.parseLong(id));
     }
@@ -29,9 +29,9 @@ public class PojoTest {
         Person person = new Person();
         person.setId(id);
 
-        Pojo.register(Person.class);
+        PojoService.register(Person.class);
 
-        assertThat(Pojo.getId(person)).isEqualTo(id);
+        assertThat(PojoService.getId(person)).isEqualTo(id);
     }
 
 }

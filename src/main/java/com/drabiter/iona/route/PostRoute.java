@@ -5,7 +5,7 @@ import spark.Response;
 
 import com.drabiter.iona.IonaResource;
 import com.drabiter.iona.http.Header;
-import com.drabiter.iona.model.Pojo;
+import com.drabiter.iona.service.pojo.PojoService;
 import com.drabiter.iona.util.JsonUtil;
 import com.google.gson.JsonSyntaxException;
 
@@ -32,7 +32,7 @@ public class PostRoute<T, I> extends BasicRoute<T, I> {
         int affected = iona.getDatabase().create(modelClass, instance);
 
         if (affected == 1) {
-            response.header(Header.Location.value(), request.pathInfo() + "/" + Pojo.getId(instance));
+            response.header(Header.Location.value(), request.pathInfo() + "/" + PojoService.getId(instance));
 
             return response201(response, instance);
         } else if (affected > 1) {

@@ -1,4 +1,4 @@
-package com.drabiter.iona.http;
+package com.drabiter.iona.service.http;
 
 import com.drabiter.iona.IonaResource;
 import com.drabiter.iona.route.DeleteRoute;
@@ -8,7 +8,7 @@ import com.drabiter.iona.route.PutRoute;
 
 import static spark.Spark.*;
 
-public class Rest {
+public class RestService {
 
     public static final String DEFAULT_POST = "/%s";
     public static final String DEFAULT_GETS = "/%s";

@@ -8,7 +8,8 @@ iona
 
 REST API for your model quickly. No XML, JSON, or YAML, all programmatically.
 
-## usage
+## example
+
 ```java
 public static void main(String[] args) throws IonaException {
     Iona.init("jdbc:mysql://localhost:3306/iona", "root", "")
@@ -22,6 +23,7 @@ After prepared the model with [ORMLite](http://ormlite.com/javadoc/ormlite-core/
 import javax.persistence.*;
 
 public class Person {
+
     @Id
     @GeneratedValue
     private long id;
@@ -49,7 +51,8 @@ DELETE  /person/:id   # delete person :id
 More on [REST](https://github.com/drabiter/iona/wiki/REST-Specification).
 
 ## features
-**custom endpoint**
+
+**Custom endpoint**
 ```
 @MentalModel(endpoint = "people")
 public class Person {..}
@@ -71,4 +74,5 @@ private String name;
 The `name` field will be saved in `full_name` column instead `name`.
 
 ## specification
+
 Tested on MariaDB 10.0.17, Java 1.8.0_25

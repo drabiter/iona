@@ -11,9 +11,9 @@ import spark.route.RouteMatcherFactory;
 import com.drabiter.iona.db.Database;
 import com.drabiter.iona.exception.ExceptionFactory;
 import com.drabiter.iona.exception.IonaException;
-import com.drabiter.iona.http.Rest;
-import com.drabiter.iona.model.Pojo;
 import com.drabiter.iona.model.Property;
+import com.drabiter.iona.service.http.RestService;
+import com.drabiter.iona.service.pojo.PojoService;
 
 public class Iona implements IonaResource {
 
@@ -43,7 +43,7 @@ public class Iona implements IonaResource {
     }
 
     public <T, I> Iona add(final Class<T> modelClass) throws IonaException {
-        Property property = Pojo.register(modelClass);
+        Property property = PojoService.register(modelClass);
         logger.info("== Added {}", modelClass);
 
         try {
@@ -57,9 +57,9 @@ public class Iona implements IonaResource {
     }
 
     public void start() {
-        for (Class<?> modelClass : Pojo.getClasses()) {
-            Property property = Pojo.get(modelClass);
-            Rest.register(this, property.getEndpoint(), modelClass, property.getIdClass());
+        for (Class<?> modelClass : PojoService.getClasses()) {
+            Property property = PojoService.get(modelClass);
+            RestService.register(this, property.getEndpoint(), modelClass, property.getIdClass());
         }
 
         SparkBase.awaitInitialization();

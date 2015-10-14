@@ -26,17 +26,20 @@ public abstract class BasicRoute<T, I> implements Route {
     protected Object response200(Response response, Object body) {
         response.status(HttpURLConnection.HTTP_OK);
         response.type(ContentType.JSON.value());
+
         return (body instanceof String) ? body : JsonUtil.get().toJson(body);
     }
 
     protected Object response201(Response response, Object body) {
         response.status(HttpURLConnection.HTTP_CREATED);
         response.type(ContentType.JSON.value());
+
         return (body instanceof String) ? body : JsonUtil.get().toJson(body);
     }
 
     protected Object response204(Response response) {
         response.status(HttpURLConnection.HTTP_NO_CONTENT);
+
         return StringUtils.EMPTY;
     }
 
@@ -46,23 +49,27 @@ public abstract class BasicRoute<T, I> implements Route {
 
     protected Object response400(Response response, String message) {
         response.status(HttpURLConnection.HTTP_BAD_REQUEST);
+
         return message;
     }
 
     protected Object response404(Response response) {
         response.status(HttpURLConnection.HTTP_NOT_FOUND);
+
         return null;
     }
 
     protected Object response409(Response response, String body) {
         response.status(HttpURLConnection.HTTP_CONFLICT);
         response.type(ContentType.TEXT.value());
+
         return body;
     }
 
     protected Object response410(Response response, String body) {
         response.status(HttpURLConnection.HTTP_GONE);
         response.type(ContentType.TEXT.value());
+
         return body;
     }
 
